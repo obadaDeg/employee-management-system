@@ -1,0 +1,166 @@
+:root {
+  --primary-color-100: #e6e2f8;
+  --primary-color-200: #cec4f6;
+  --primary-color-300: #b2a2f9;
+  --primary-color-400: #9178fa;
+  --primary-color-500: #7152f3;
+  --primary-color-600: #5d3de7;
+  --primary-color-700: #4f31d0;
+  --primary-color-800: #3517b4;
+  --primary-color-900: #250c92;
+
+  --primary-color-opacity-90: rgba(113, 82, 243, 0.9);
+  --primary-color-opacity-80: rgba(113, 82, 243, 0.8);
+  --primary-color-opacity-20: rgba(113, 82, 243, 0.2);
+  --primary-color-opacity-10: rgba(113, 82, 243, 0.1);
+  --primary-color-opacity-5: rgba(113, 82, 243, 0.05);
+
+  --secondary-color-100: #e1f1bc;
+  --secondary-color-200: #cee993;
+  --secondary-color-300: #bcde6b;
+  --secondary-color-400: #afd751;
+  --secondary-color-500: #a3d139;
+  --secondary-color-600: #97bd33;
+  --secondary-color-700: #88a52a;
+  --secondary-color-800: #798d21;
+  --secondary-color-900: #626615;
+
+  --secondary-color-opacity-90: rgba(163, 209, 57, 0.9);
+  --secondary-color-opacity-80: rgba(163, 209, 57, 0.8);
+  --secondary-color-opacity-20: rgba(163, 209, 57, 0.2);
+  --secondary-color-opacity-10: rgba(163, 209, 57, 0.1);
+  --secondary-color-opacity-5: rgba(163, 209, 57, 0.05);
+
+  --tertiary-color-100: #f0b0d9;
+  --tertiary-color-200: #e67bc2;
+  --tertiary-color-300: #d846ab;
+  --tertiary-color-400: #cd0d9b;
+  --tertiary-color-500: #b21589;
+  --tertiary-color-600: #af0a87;
+  --tertiary-color-700: #9b0982;
+  --tertiary-color-800: #8a087c;
+  --tertiary-color-900: #6c0772;
+
+  --tertiary-color-opacity-90: rgba(178, 21, 137, 0.9);
+  --tertiary-color-opacity-80: rgba(178, 21, 137, 0.8);
+  --tertiary-color-opacity-20: rgba(178, 21, 137, 0.2);
+  --tertiary-color-opacity-10: rgba(178, 21, 137, 0.1);
+  --tertiary-color-opacity-5: rgba(178, 21, 137, 0.05);
+
+  --light-color-500: #d9e1e1;
+  --light-color-opacity-90: rgba(217, 225, 255, 0.9);
+  --light-color-opacity-80: rgba(217, 225, 255, 0.8);
+  --light-color-opacity-20: rgba(217, 225, 255, 0.2);
+  --light-color-opacity-10: rgba(217, 225, 255, 0.1);
+  --light-color-opacity-5: rgba(217, 225, 255, 0.05);
+
+  --dark-color-500: #16151c;
+  --dark-color-opacity-90: rgba(22, 21, 28, 0.9);
+  --dark-color-opacity-80: rgba(22, 21, 28, 0.8);
+  --dark-color-opacity-20: rgba(22, 21, 28, 0.2);
+  --dark-color-opacity-10: rgba(22, 21, 28, 0.1);
+  --dark-color-opacity-5: rgba(22, 21, 28, 0.05);
+
+  --gray-color-500: #a2a1a8;
+  --gray-color-opacity-90: rgba(162, 161, 168, 0.9);
+  --gray-color-opacity-80: rgba(162, 161, 168, 0.8);
+  --gray-color-opacity-20: rgba(162, 161, 168, 0.2);
+  --gray-color-opacity-10: rgba(162, 161, 168, 0.1);
+  --gray-color-opacity-5: rgba(162, 161, 168, 0.05);
+
+  --white-color-500: #ffffff;
+  --white-color-opacity-90: rgba(255, 255, 255, 0.9);
+  --white-color-opacity-80: rgba(255, 255, 255, 0.8);
+  --white-color-opacity-20: rgba(255, 255, 255, 0.2);
+  --white-color-opacity-10: rgba(255, 255, 255, 0.1);
+  --white-color-opacity-5: rgba(255, 255, 255, 0.05);
+
+  --gradient-primary: linear-gradient(45deg, #7fbe30 0%, #30a5be 100%);
+  --gradient-secondary: linear-gradient(45deg, #30beb6 0%, #3069be 100%);
+  --gradient-tertiary: linear-gradient(45deg, #5d30be 0%, #b330be 100%);
+
+  --color-options-1: #30be82;
+  --color-options-2: #30beb6;
+  --color-options-3: #5d30be;
+  --color-options-4: #304fbe;
+
+  --header-1-regular: "Lexend", 300 5rem;
+  --header-1-line-height: 6rem;
+  --header-2-regular: "Lexend", 300 3.75rem;
+  --header-2-line-height: 4.5rem;
+  --header-3-regular: "Lexend", 300 2.5rem;
+  --header-3-line-height: 3rem;
+  --header-4-regular: "Lexend", 300 1.88rem;
+  --header-4-line-height: 2.25rem;
+  --header-5-regular: "Lexend", 300 1.5rem;
+  --header-5-line-height: 1.8rem;
+  --header-6-regular: "Lexend", 300 1.3rem;
+  --header-6-line-height: 1.6rem;
+  --header-7-regular: "Lexend", 300 1.13rem;
+  --header-7-line-height: 1.4rem;
+
+  --body-1-regular: "Lexend", 300 1.13rem;
+  --body-1-line-height: 1.8rem;
+  --body-2-regular: "Lexend", 300 0.88rem;
+  --body-2-line-height: 1.4rem;
+  --caption-regular: "Lexend", 300 0.75rem;
+  --caption-line-height: 1.2rem;
+  --label-regular: "Lexend", 300 0.69rem;
+  --label-line-height: 1rem;
+
+  --header-1-bold: "Lexend", 600 5rem;
+  --header-1-bold-line-height: 6rem;
+  --header-2-bold: "Lexend", 600 3.75rem;
+  --header-2-bold-line-height: 4.5rem;
+  --header-3-bold: "Lexend", 600 2.5rem;
+  --header-3-bold-line-height: 3rem;
+  --header-4-bold: "Lexend", 600 1.88rem;
+  --header-4-bold-line-height: 2.25rem;
+  --header-5-bold: "Lexend", 600 1.5rem;
+  --header-5-bold-line-height: 1.8rem;
+  --header-6-bold: "Lexend", 600 1.3rem;
+  --header-6-bold-line-height: 1.6rem;
+  --header-7-bold: "Lexend", 600 1.13rem;
+  --header-7-bold-line-height: 1.4rem;
+
+  --body-1-bold: "Lexend", 600 1.13rem;
+  --body-1-bold-line-height: 1.8rem;
+  --body-2-bold: "Lexend", 600 0.88rem;
+  --body-2-bold-line-height: 1.4rem;
+  --caption-bold: "Lexend", 600 0.75rem;
+  --caption-bold-line-height: 1.2rem;
+  --label-bold: "Lexend", 600 0.69rem;
+  --label-bold-line-height: 1rem;
+
+  --semi-bold: 600;
+
+  --animation-duration: 0.3s;
+  --animation-ease: ease-in-out;
+}
+
+:root.dark-mode {
+  --background-color: var(--dark-color-500);
+  --text-color: var(--light-color-500);
+}
+
+:root.light-mode {
+  --background-color: var(--light-color-500);
+  --text-color: var(--dark-color-500);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lexend", sans-serif;
+  color: var(--dark-color-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    
+  }
+}
