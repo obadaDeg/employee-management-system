@@ -159,8 +159,12 @@ body {
   color: var(--dark-color-500);
 }
 
+#root {
+  display: flex;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    
+
   }
 }
