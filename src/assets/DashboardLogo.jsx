@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 
 export default function DashboardLogo({ isActive }) {
   if (!isActive) {
@@ -51,4 +52,6 @@ export default function DashboardLogo({ isActive }) {
   );
 }
 
-
+DashboardLogo.propTypes = {
+  isActive: PropTypes.bool.isRequired,
+};

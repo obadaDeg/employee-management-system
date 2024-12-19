@@ -3,6 +3,7 @@ import "./App.css";
 import RootLayout from "./pages/RootLayout";
 import HomePage from "./pages/HomePage";
 import AllEmployeesPage from "./pages/AllEmployees";
+import Attendance from "./pages/Attendance";
 
 const router = createBrowserRouter([
   {
@@ -14,9 +15,22 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: 'employees',
-        element: <AllEmployeesPage />
-      }
+        path: "employees",
+        children: [
+          {
+            index: true,
+            element: <AllEmployeesPage />,
+          },
+          {
+            path: 'new',
+            element: <Attendance />
+          }
+        ],
+      },
+      {
+        path: "attendance",
+        element: <Attendance />,
+      },
     ],
   },
 ]);

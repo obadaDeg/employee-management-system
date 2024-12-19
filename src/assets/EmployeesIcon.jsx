@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export default function EmployeesIcon({ isActive }) {
   if (isActive) {
     return (
@@ -69,4 +71,9 @@ export default function EmployeesIcon({ isActive }) {
       />
     </svg>
   );
+}
+
+
+EmployeesIcon.propTypes = {
+    isActive: PropTypes.bool.isRequired
 }

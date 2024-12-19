@@ -1,0 +1,70 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .headerTitle {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .headerTitle h6 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1.6rem;
+    margin: 0;
+  }
+  
+  .headerTitle span {
+    color: var(--gray-color-500);
+    font-weight: 300;
+  }
+  
+  .spanGroup {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .inputField {
+    border-radius: 0.625rem;
+    border: 0.1rem solid var(--dark-color-opacity-20);
+    padding: 0.5rem 1rem;
+    width: 16rem;
+  }
+  
+  .profileMenu {
+    position: relative;
+  }
+  
+  .profileButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .username {
+    font-size: 1rem;
+  }
+  
+  .icon {
+    font-size: 1.2rem;
+  }
+  
+  /* Optional Menu Styling */
+  .MuiMenu-root {
+    margin-top: 0.5rem;
+  }
+  
+  .MuiMenuItem-root {
+    font-size: 1rem;
+  }
+  
