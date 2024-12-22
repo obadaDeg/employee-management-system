@@ -41,7 +41,7 @@ function Header() {
         <span>{headerContent.subtitle}</span>
       </div>
       <div className={styles.spanGroup}>
-        <input type="text" className={styles.inputField} placeholder="Search" />
+        {/* <input type="text" className={styles.inputField} placeholder="Search" /> */}
         <div className={styles.profileMenu}>
           <Button
             disableElevation

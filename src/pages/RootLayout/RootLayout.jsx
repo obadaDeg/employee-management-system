@@ -1,5 +1,5 @@
-import Header from "../components/Header/Header";
-import SideNavbar from "../components/SideNavBar/SideNavbar";
+import Header from "../../components/Header/Header";
+import SideNavbar from "../../components/SideNavBar/SideNavbar";
 import { Outlet } from "react-router-dom";
 import styles from './RootLayout.module.css'
 
