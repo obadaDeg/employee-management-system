@@ -1,5 +1,5 @@
-import TableView from "../components/Table/TableView";
-import { attendanceData } from "../utils/dummyData";
+import TableView from "../../components/Table/TableView";
+import { attendanceData } from "../../utils/dummyData";
 
 export default function Attendance() {
   const columns = [

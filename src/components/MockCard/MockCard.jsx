@@ -27,6 +27,11 @@ function MockCard({ title, updatedTime, count = 0, linkTo = "/employees" }) {
   );
 }
 
-MockCard.propTypes = {};
+MockCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  updatedTime: PropTypes.string.isRequired,
+  count: PropTypes.number.isRequired,
+  linkTo: PropTypes.string.isRequired,
+};
 
 export default MockCard;

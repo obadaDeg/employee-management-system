@@ -1,23 +1,9 @@
 import { useLocation } from "react-router-dom";
 import styles from "./Header.module.css";
 import Button from "@mui/material/Button";
-import { Avatar, Icon, Menu, MenuItem } from "@mui/material";
+import { Avatar, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
-
-const HEADER_CONTENT = {
-  dashboard: {
-    title: "Welcome",
-    subtitle: "Good Morning",
-  },
-  employees: {
-    title: "All Employees",
-    subtitle: "All Employees Information",
-  },
-  attendance: {
-    title: "Attendance",
-    subtitle: "All Employees Attendance",
-  },
-};
+import { HEADER_CONTENT } from "../../utils/static-content";
 
 function Header() {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);

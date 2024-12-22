@@ -1,0 +1,151 @@
+{
+  "employees": {
+    "E001": {
+      "name": "John Doe",
+      "designation": "Developer",
+      "type": "Office",
+      "status": "Permanent"
+    },
+    "E002": {
+      "name": "Jane Smith",
+      "designation": "Manager",
+      "type": "Remote",
+      "status": "Permanent"
+    },
+    "E003": {
+      "name": "Alice Johnson",
+      "designation": "Designer",
+      "type": "Office",
+      "status": "Contract"
+    },
+    "E004": {
+      "name": "Bob Brown",
+      "designation": "Developer",
+      "type": "Remote",
+      "status": "Permanent"
+    },
+    "E005": {
+      "name": "Chris Green",
+      "designation": "Analyst",
+      "type": "Office",
+      "status": "Permanent"
+    },
+    "E006": {
+      "name": "John Doe",
+      "designation": "Developer",
+      "type": "Office",
+      "status": "Permanent"
+    },
+    "E007": {
+      "name": "Jane Smith",
+      "designation": "Manager",
+      "type": "Remote",
+      "status": "Permanent"
+    },
+    "E008": {
+      "name": "Alice Johnson",
+      "designation": "Designer",
+      "type": "Office",
+      "status": "Contract"
+    },
+    "E009": {
+      "name": "Bob Brown",
+      "designation": "Developer",
+      "type": "Remote",
+      "status": "Permanent"
+    },
+    "E010": {
+      "name": "Chris Green",
+      "designation": "Analyst",
+      "type": "Office",
+      "status": "Permanent"
+    },
+    "E011": {
+      "name": "John Doe",
+      "designation": "Developer",
+      "type": "Office",
+      "status": "Permanent"
+    },
+    "E012": {
+      "name": "Jane Smith",
+      "designation": "Manager",
+      "type": "Remote",
+      "status": "Permanent"
+    },
+    "E013": {
+      "name": "Alice Johnson",
+      "designation": "Designer",
+      "type": "Office",
+      "status": "Contract"
+    },
+    "E014": {
+      "name": "Bob Brown",
+      "designation": "Developer",
+      "type": "Remote",
+      "status": "Permanent"
+    },
+    "E015": {
+      "name": "Chris Green",
+      "designation": "Analyst",
+      "type": "Office",
+      "status": "Permanent"
+    }
+  },
+
+  "attendance": {
+    "2024-12-22": {
+      "E001": {
+        "checkinTime": 1699372800000, 
+        "status": "On Time",
+        "details": {
+          "leave": false,
+          "overtime": 0
+        }
+      },
+      "E002": {
+        "checkinTime": 1699373400000,
+        "status": "Late",
+        "details": {
+          "leave": false,
+          "overtime": 2
+        }
+      },
+      "E003": {
+        "checkinTime": 1699374000000,
+        "status": "On Time",
+        "details": {
+          "leave": false,
+          "overtime": 1
+        }
+      },
+      "E004": {
+        "checkinTime": 1699374600000,
+        "status": "Late",
+        "details": {
+          "leave": false,
+          "overtime": 0
+        }
+      },
+      "E005": {
+        "checkinTime": 1699375200000,
+        "status": "On Time",
+        "details": {
+          "leave": false,
+          "overtime": 0
+        }
+      }
+    }
+  },
+
+  "roles": {
+    "root": {
+      "permissions": ["create", "read", "update", "delete"]
+    },
+    "admin": {
+      "permissions": ["read", "update"]
+    },
+    "employee": {
+      "permissions": ["read"]
+    }
+  }
+}

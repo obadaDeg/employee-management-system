@@ -7,6 +7,7 @@ import {
   TableRow,
   TableFooter,
   TablePagination,
+  TableContainer,
 } from "@mui/material";
 import styles from "./TableView.module.css";
 
@@ -21,43 +22,46 @@ function TableView({
 
   const paginatedRows = showRows ? data.slice(0, showRows) : data;
   console.log(paginatedRows);
-  
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          {columns.map((column) => (
-            <TableCell key={column.key} className={styles.tableHeader}>
-              {column.label}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {paginatedRows.map((row, rowIndex) => (
-          <TableRow key={rowIndex}>
-            {columns.map((column) => {
-              return <TableCell key={column.key}>{row[column.key]}</TableCell>;
-            })}
-          </TableRow>
-        ))}
-      </TableBody>
-      {!showRows && (
-        <TableFooter>
+    <TableContainer >
+      <Table>
+        <TableHead>
           <TableRow>
-            <TablePagination
-              rowsPerPageOptions={rowsPerPageOptions}
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={0}
-              onPageChange={() => {}}
-              onRowsPerPageChange={() => {}}
-            />
+            {columns.map((column) => (
+              <TableCell key={column.key} className={styles.tableHeader}>
+                {column.label}
+              </TableCell>
+            ))}
           </TableRow>
-        </TableFooter>
-      )}
-    </Table>
+        </TableHead>
+        <TableBody>
+          {paginatedRows.map((row, rowIndex) => (
+            <TableRow key={rowIndex}>
+              {columns.map((column) => {
+                return (
+                  <TableCell key={column.key}>{row[column.key]}</TableCell>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableBody>
+        {!showRows && (
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={rowsPerPageOptions}
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={0}
+                onPageChange={() => {}}
+                onRowsPerPageChange={() => {}}
+              />
+            </TableRow>
+          </TableFooter>
+        )}
+      </Table>
+    </TableContainer>
   );
 }
 
