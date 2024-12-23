@@ -1,4 +1,3 @@
-import React from "react";
 import Form from "../../components/Form/Form";
 import { loginFields } from "../../utils/constants";
 import styles from "./LoginPage.module.css";

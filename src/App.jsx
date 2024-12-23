@@ -4,7 +4,7 @@ import RootLayout from "./pages/RootLayout/RootLayout";
 import HomePage from "./pages/HomePage/HomePage";
 import AllEmployeesPage from "./pages/AllEmployees/AllEmployees";
 import Attendance from "./pages/Attendance/Attendance";
-import ProtectedRoute from "./components/ProtectedRoute";
+// import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/Auth/LoginPage";
 
 const router = createBrowserRouter([
