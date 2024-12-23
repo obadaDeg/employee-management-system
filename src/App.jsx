@@ -22,9 +22,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              <ProtectedRoute>
+              // <ProtectedRoute>
                 <AllEmployeesPage />
-              </ProtectedRoute>
+              // </ProtectedRoute>
             ),
           },
           {
@@ -36,9 +36,9 @@ const router = createBrowserRouter([
       {
         path: "attendance",
         element: (
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <Attendance />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         ),
       },
     ],
