@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 export default function ProtectedRoute({ children, allowedRoles }) {
   const user = useSelector((state) => state.auth.user);
   if (!user || !allowedRoles.includes(user.role))
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   return children;
 }
 

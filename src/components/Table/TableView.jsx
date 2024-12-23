@@ -71,7 +71,7 @@ function TableView({
                 {columns.map((column, colIndex) => (
                   <TableCell key={colIndex}>
                     {column.key === "name" ? (
-                      <NavLink to={`/employee/${row.id}`}>{row[column.key]}</NavLink>
+                      <NavLink to={`/employees/${row.id}`}>{row[column.key]}</NavLink>
                     ) : (
                       row[column.key]
                     )}

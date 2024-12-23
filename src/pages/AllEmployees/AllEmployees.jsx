@@ -7,35 +7,47 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import Modal from "../../components/Modal/Modal";
-// import stylesModule from "./AllEmployees.module.css"
-
-const styles = {
-  ":hover": {
-    color: "red",
-  },
-};
+import { Link } from "react-router-dom";
+import stylesModule from "./AllEmployees.module.css"
 
 export default function AllEmployeesPage() {
-  const [open, setOpen] = useState(false);
-
+  const [openAddNewEmployee, setOpenAddNewEmployee] = useState(false);
+  const [editEmployee, setEditEmployee] = useState(false);
+  const [deleteEmployee, setDeleteEmployee] = useState(false);
   function handleOpen() {
-    setOpen(true);
+    setOpenAddNewEmployee(true);
   }
 
   function handleClose() {
-    setOpen(false);
+    setOpenAddNewEmployee(false);
   }
 
   const data = employeesData.map((employee) => ({
     ...employee,
     actions: [
-      <VisibilityIcon
-        key={`view-${employee.id}`}
+      <Link key={`view-${employee.id}`} to={`/employees/${employee.id}`}>
+        <VisibilityIcon fontSize="small"  
+        className={stylesModule.actionIcon}
+
+        />
+      </Link>,
+      <EditIcon
+        key={`edit-${employee.id}`}
         fontSize="small"
-        sx={styles}
+        className={stylesModule.actionIcon}
+        onClick={() => {
+          setEditEmployee(true);
+        }}
       />,
-      <EditIcon key={`edit-${employee.id}`} fontSize="small" sx={styles} />,
-      <DeleteIcon key={`delete-${employee.id}`} fontSize="small" sx={styles} />,
+      <DeleteIcon
+        key={`delete-${employee.id}`}
+        fontSize="small"
+        className={stylesModule.actionIcon}
+        
+        onClick={() => {
+          setDeleteEmployee(true);
+        }}
+      />,
     ],
   }));
 
@@ -48,19 +60,23 @@ export default function AllEmployeesPage() {
         disableElevation
         disableFocusRipple
         disableRipple
-        // className={stylesModule.newButton}
+        // className={stylesModule.newButton} // not working
         sx={{
-          margin: "0 1rem"
+          margin: "0 1rem",
         }}
       >
         Add New Employee
       </Button>
 
-      <Modal isOpen={open} title="Add New Employee" onClose={handleClose}>
-        <form>
-          
-        </form>
+      <Modal
+        isOpen={openAddNewEmployee}
+        title="Add New Employee"
+        onClose={handleClose}
+      >
+        <form></form>
       </Modal>
+      <Modal isOpen={editEmployee} title={"Edit Employee"}>hi</Modal>
+      <Modal isOpen={deleteEmployee} title={"Are you sure you want to delete this employee?"}>hey</Modal>
 
       <TableView columns={employeeColumns} data={data} />
     </>

@@ -1,5 +1,14 @@
 .newButton {
   margin: 0.5rem;
-  background-color: red;
+  background-color: var(--dark-color-500);
   color: white;
+}
+
+.actionIcon {
+  color: var(--dark-color-500);
+  cursor: pointer;
+}
+
+.actionIcon:hover {
+  color: var(--dark-color-opacity-80);
 }

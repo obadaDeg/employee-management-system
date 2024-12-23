@@ -4,6 +4,8 @@ import RootLayout from "./pages/RootLayout/RootLayout";
 import HomePage from "./pages/HomePage/HomePage";
 import AllEmployeesPage from "./pages/AllEmployees/AllEmployees";
 import Attendance from "./pages/Attendance/Attendance";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoginPage from "./pages/Auth/LoginPage";
 
 const router = createBrowserRouter([
   {
@@ -19,20 +21,32 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <AllEmployeesPage />,
+            element: (
+              <ProtectedRoute>
+                <AllEmployeesPage />
+              </ProtectedRoute>
+            ),
           },
           {
-            path: ':id',
-            element: <></>
-          }
+            path: ":id",
+            element: <></>,
+          },
         ],
       },
       {
         path: "attendance",
-        element: <Attendance />,
+        element: (
+          <ProtectedRoute>
+            <Attendance />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
+  {
+    path: "login",
+    element: <LoginPage />
+  }
 ]);
 
 function App() {
