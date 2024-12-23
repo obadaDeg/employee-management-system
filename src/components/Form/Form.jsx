@@ -1,7 +1,13 @@
 import PropTypes from "prop-types";
 import styles from "./Form.module.css";
 
-function Form({ fields, onSubmit, defaultValues = {}, className }) {
+function Form({
+  fields,
+  onSubmit,
+  defaultValues = {},
+  className,
+  buttonTitle,
+}) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -10,38 +16,59 @@ function Form({ fields, onSubmit, defaultValues = {}, className }) {
   };
 
   return (
-    <form className={`${styles.container} ${className || ""}`} onSubmit={handleSubmit} noValidate>
-      {fields.map(({ id, label, type = "text", required = false, options }) => (
-        <div key={id} className={styles.formGroup}>
-          <label htmlFor={id}>{label}</label>
-          {type === "select" ? (
-            <select
-              id={id}
-              name={id}
-              defaultValue={defaultValues[id] || ""}
-              required={required}
-            >
-              <option value="" disabled>
-                Select an option
-              </option>
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+    <form
+      className={`${styles.container} ${className || ""}`}
+      onSubmit={handleSubmit}
+      noValidate
+    >
+      {fields.map(
+        ({
+          id,
+          label,
+          type = "text",
+          required = false,
+          options,
+          error,
+          onChange,
+          onBlur,
+        }) => (
+          <div key={id} className={styles.formGroup}>
+            <label htmlFor={id}>{label}</label>
+            {type === "select" ? (
+              <select
+                id={id}
+                name={id}
+                defaultValue={defaultValues[id] || ""}
+                required={required}
+                onChange={() => onChange(event.target.value)}
+                onBlur={onBlur}
+              >
+                <option value="" disabled>
+                  Select an option
                 </option>
-              ))}
-            </select>
-          ) : (
-            <input
-              id={id}
-              name={id}
-              type={type}
-              defaultValue={defaultValues[id] || ""}
-              required={required}
-            />
-          )}
-        </div>
-      ))}
-      <button type="submit">Submit</button>
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                id={id}
+                name={id}
+                type={type}
+                defaultValue={defaultValues[id] || ""}
+                required={required}
+                className={error ? styles.inputError : ""}
+                onChange={() => onChange(event.target.value)}
+                onBlur={onBlur}
+              />
+            )}
+            {error && <p className={styles.error}>{error}</p>}{" "}
+          </div>
+        )
+      )}
+      <button type="submit">{buttonTitle || "Submit"}</button>
     </form>
   );
 }
@@ -59,6 +86,7 @@ Form.propTypes = {
           value: PropTypes.string.isRequired,
         })
       ),
+      error: PropTypes.string,
     })
   ).isRequired,
   onSubmit: PropTypes.func.isRequired,

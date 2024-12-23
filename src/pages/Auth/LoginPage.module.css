@@ -8,3 +8,10 @@
     transform: translate(-50%, -50%);
     min-width: 50%;
 }
+
+.authForm svg {
+    height: 7rem;
+    width: 7rem;
+    margin: 0 auto;
+    display: block;
+}

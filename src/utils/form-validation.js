@@ -19,7 +19,7 @@ export const validateForm = (formData, validationRules) => {
       }
 
       if (rule.type === "email" && value) {
-        if (validateEmail(value)) {
+        if (!validateEmail(value)) {
           errors[field] = rule.message || "Invalid email format.";
         }
       }
@@ -57,27 +57,3 @@ export const validateForm = (formData, validationRules) => {
 
   return errors;
 };
-
-// Example usage:
-const formData = {
-  email: "example@domain",
-  password: "12345",
-};
-
-const validationRules = {
-  email: [
-    { type: "required", message: "Email is required." },
-    { type: "email", message: "Please enter a valid email." },
-  ],
-  password: [
-    { type: "required", message: "Password is required." },
-    {
-      type: "minLength",
-      value: 6,
-      message: "Password must be at least 6 characters long.",
-    },
-  ],
-};
-
-const errors = validateForm(formData, validationRules);
-console.log(errors);
