@@ -1,9 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import Form from "../../components/Form/Form";
 import Modal from "../../components/Modal/Modal";
 import { loginFields } from "../../utils/constants";
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    navigate("/");
+  };
+
   return (
     // <div className={styles.authForm}>
     //   <Form
@@ -12,9 +19,9 @@ export default function LoginPage() {
     //   />
     // </div>
     <Modal isOpen>
-        <Form
+      <Form
         fields={loginFields}
-        onSubmit={(data) => console.log("Login Data:", data)}
+        onSubmit={handleSubmit}
       />
     </Modal>
   );
