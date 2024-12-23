@@ -1,7 +1,7 @@
 export const login = (email, password) => async (dispatch) => {
   dispatch({ type: "LOGIN_REQUEST" });
   try {
-    const response = await fetch("https://firebase-api-url/signin", {
+    const response = await fetch("https://firebase-api-url/signin", { // this url will be changed
       method: "POST",
       body: JSON.stringify({ email, password }),
       headers: { "Content-Type": "application/json" },
