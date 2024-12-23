@@ -1,3 +1,4 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Table,
@@ -5,63 +6,83 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableFooter,
   TablePagination,
   TableContainer,
+  Paper,
 } from "@mui/material";
 import styles from "./TableView.module.css";
+import { NavLink } from "react-router-dom";
 
 function TableView({
   columns,
   data,
-  rowsPerPageOptions = [5, 10],
+  rowsPerPageOptions = [5, 10, 25],
   defaultRowsPerPage = 10,
   showRows,
 }) {
-  const rowsPerPage = defaultRowsPerPage;
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
 
-  const paginatedRows = showRows ? data.slice(0, showRows) : data;
-  console.log(paginatedRows);
+  const paginatedRows = showRows
+    ? data.slice(0, showRows)
+    : data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
-    <TableContainer >
-      <Table>
-        <TableHead>
-          <TableRow>
-            {columns.map((column) => (
-              <TableCell key={column.key} className={styles.tableHeader}>
-                {column.label}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {paginatedRows.map((row, rowIndex) => (
-            <TableRow key={rowIndex}>
-              {columns.map((column) => {
-                return (
-                  <TableCell key={column.key}>{row[column.key]}</TableCell>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableBody>
-        {!showRows && (
-          <TableFooter>
+    <Paper
+      sx={{
+        margin: "1rem",
+      }}
+    >
+      {!showRows && (
+        <TablePagination
+          rowsPerPageOptions={rowsPerPageOptions}
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handlePageChange}
+          onRowsPerPageChange={handleRowsPerPageChange}
+          component="div"
+        />
+      )}
+
+      <TableContainer component={Paper} className={styles.tableContainer}>
+        <Table>
+          <TableHead>
             <TableRow>
-              <TablePagination
-                rowsPerPageOptions={rowsPerPageOptions}
-                count={data.length}
-                rowsPerPage={rowsPerPage}
-                page={0}
-                onPageChange={() => {}}
-                onRowsPerPageChange={() => {}}
-              />
+              {columns.map((column) => (
+                <TableCell key={column.key} className={styles.tableHeader}>
+                  {column.label}
+                </TableCell>
+              ))}
             </TableRow>
-          </TableFooter>
-        )}
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {paginatedRows.map((row, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {columns.map((column, colIndex) => (
+                  <TableCell key={colIndex}>
+                    {column.key === "name" ? (
+                      <NavLink to={`/employee/${row.id}`}>{row[column.key]}</NavLink>
+                    ) : (
+                      row[column.key]
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }
 

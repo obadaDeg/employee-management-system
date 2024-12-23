@@ -22,8 +22,8 @@ const router = createBrowserRouter([
             element: <AllEmployeesPage />,
           },
           {
-            path: 'new',
-            element: <Attendance />
+            path: ':id',
+            element: <></>
           }
         ],
       },

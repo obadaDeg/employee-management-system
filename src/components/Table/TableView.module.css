@@ -2,3 +2,12 @@
   font-weight: bold;
   background-color: var(--gray-color-200);
 }
+
+.tableContainer {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+a {
+  color: var(--dark-color-500);
+}
