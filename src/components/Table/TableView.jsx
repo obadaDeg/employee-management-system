@@ -12,7 +12,9 @@ import {
 } from "@mui/material";
 import styles from "./TableView.module.css";
 import { NavLink } from "react-router-dom";
+import { defaultImage } from "../../utils/constants";
 
+// Default image for user profiles
 function TableView({
   columns,
   data,
@@ -71,7 +73,21 @@ function TableView({
                 {columns.map((column, colIndex) => (
                   <TableCell key={colIndex}>
                     {column.key === "name" ? (
-                      <NavLink to={`/employees/${row.id}`}>{row[column.key]}</NavLink>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <img
+                          src={defaultImage}
+                          alt="User"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            marginRight: "10px",
+                          }}
+                        />
+                        <NavLink to={`/employees/${row.id}`}>
+                          {row[column.key]}
+                        </NavLink>
+                      </div>
                     ) : (
                       row[column.key]
                     )}

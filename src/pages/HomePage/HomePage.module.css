@@ -11,7 +11,6 @@
   gap: 1rem;
 }
 
-
 .attendanceSection {
   display: flex;
   flex-direction: column;
@@ -27,3 +26,23 @@
   margin: 0 auto;
 }
 
+.toggleButtons {
+  margin-bottom: 16px;
+}
+
+.cardViewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardView {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.viewMore {
+  margin-left: 16px;
+}
