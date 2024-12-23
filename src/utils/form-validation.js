@@ -19,8 +19,7 @@ export const validateForm = (formData, validationRules) => {
       }
 
       if (rule.type === "email" && value) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) {
+        if (validateEmail(value)) {
           errors[field] = rule.message || "Invalid email format.";
         }
       }
