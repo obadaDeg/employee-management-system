@@ -1,28 +1,77 @@
-import { Button } from "@mui/material";
+import { Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import styles from "./HomePage.module.css";
 import TableView from "../../components/Table/TableView";
-import { attendanceData } from "../../utils/dummyData";
-import { Link } from "react-router-dom";
+import { attendanceData, employeesData } from "../../utils/dummyData";
+import { Link, useSearchParams } from "react-router-dom";
 import MockCard from "../../components/MockCard/MockCard";
+import AttendanceCard from "../../components/AttendanceCard/AttendanceCard";
 import { attendanceColumns } from "../../utils/constants";
 
 export default function HomePage() {
-  
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const viewMode = searchParams.get("view") || "cards";
+
+  const handleViewChange = (event, newMode) => {
+    if (newMode) {
+      setSearchParams({ view: newMode });
+    }
+  };
 
   return (
     <div id="home" className={styles.homeContainer}>
       <section className={styles.dashboardSection}>
-        <MockCard title={"All Employees"} updatedTime="Just Now" count={500} linkTo="/employees"/>
-        <MockCard title={"Total Attedance"} updatedTime="Just Now" count={500} linkTo="/attendance"/>
+        <MockCard
+          title={"All Employees"}
+          updatedTime="Just Now"
+          count={employeesData.length}
+          linkTo="/employees"
+        />
+        <MockCard
+          title={"Total Attendance"}
+          updatedTime="Just Now"
+          count={attendanceData.length}
+          linkTo="/attendance"
+        />
       </section>
       <section id="attendance-overview" className={styles.attendanceSection}>
         <h2 className={styles.sectionTitle}>Attendance Overview</h2>
-        <TableView columns={attendanceColumns} data={attendanceData} showRows={5} />
-        <Link to={"attendance"} className={styles.viewMore}>
-          <Button disableElevation disableFocusRipple disableTouchRipple>
-            View More
-          </Button>
-        </Link>
+
+        <ToggleButtonGroup
+          value={viewMode}
+          exclusive
+          onChange={handleViewChange}
+          aria-label="View Mode"
+          className={styles.toggleButtons}
+        >
+          <ToggleButton value="cards" aria-label="Card View">
+            Card View
+          </ToggleButton>
+          <ToggleButton value="table" aria-label="Table View">
+            Table View
+          </ToggleButton>
+        </ToggleButtonGroup>
+
+        {viewMode === "table" ? (
+          <TableView
+            columns={attendanceColumns}
+            data={attendanceData}
+            showRows={5}
+          />
+        ) : (
+          <div className={styles.cardViewContainer}>
+            <div className={styles.cardView}>
+              {attendanceData.map((record) => (
+                <AttendanceCard key={record.id} data={record} />
+              ))}
+            </div>
+            <Link to={"attendance"} className={styles.viewMore}>
+              <Button disableElevation disableFocusRipple disableTouchRipple>
+                View More
+              </Button>
+            </Link>
+          </div>
+        )}
       </section>
     </div>
   );

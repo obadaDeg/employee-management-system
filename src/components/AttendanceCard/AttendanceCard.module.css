@@ -1,0 +1,21 @@
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 200px;
+}
+
+.cardImage {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  margin-bottom: 8px;
+}
