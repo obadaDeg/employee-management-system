@@ -2,9 +2,17 @@ import { useState } from "react";
 
 export function useModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [context, setContext] = useState(null);
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const openModal = (newContext = null) => {
+    setContext(newContext);
+    setIsOpen(true);
+  };
 
-  return { isOpen, openModal, closeModal };
+  const closeModal = () => {
+    setContext(null);
+    setIsOpen(false);
+  };
+
+  return { isOpen, openModal, closeModal, context };
 }

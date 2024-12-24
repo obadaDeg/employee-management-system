@@ -1,12 +1,18 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, CircularProgress, Typography } from "@mui/material";
 import Form from "../../components/Form/Form";
 import { loginFields } from "../../utils/constants";
 import styles from "./LoginPage.module.css";
 import AppLogo from "../../assets/AppLogo";
 import useForm from "../../hooks/useForm";
+import { login } from "../../redux/authSlice";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { status, error } = useSelector((state) => state.auth);
 
   const validationRules = {
     email: [
@@ -28,14 +34,14 @@ export default function LoginPage() {
     password: "",
   };
 
-  const { formValues, errors, handleChange, handleBlur, handleSubmit } = useForm(
-    initialValues,
-    validationRules,
-    (formValues) => {
-      console.log("Form submitted with values:", formValues);
-      navigate("/");
-    }
-  );
+  const { formValues, errors, handleChange, handleBlur, handleSubmit } =
+    useForm(initialValues, validationRules, (formValues) => {
+      dispatch(login(formValues)).then((action) => {
+        if (login.fulfilled.match(action)) {
+          navigate("/");
+        }
+      });
+    });
 
   return (
     <div className={styles.authForm}>
@@ -49,8 +55,15 @@ export default function LoginPage() {
           onBlur: () => handleBlur(field.id),
         }))}
         onSubmit={handleSubmit}
-        buttonTitle={"Login"}
+        buttonTitle={
+          status === "loading" ? <CircularProgress size={20} /> : "Login"
+        }
       />
+      {status === "failed" && (
+        <Typography color="error" sx={{ marginTop: 2 }}>
+          {error}
+        </Typography>
+      )}
     </div>
   );
 }
