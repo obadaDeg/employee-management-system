@@ -1,5 +1,5 @@
 import { initializeApp as initializeClientApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import admin from "firebase-admin";
 import { getFirestore } from "firebase-admin/firestore";
 
@@ -18,10 +18,22 @@ const auth = getAuth(firebaseClientApp);
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(
-      "C:\\Users\\obada\\employee-management-system\\src\\utils\\scripts\\serviceKey.json"
+      "C:\\Users\\Obada.Daghlas\\Desktop\\employee-management-system\\src\\utils\\scripts\\serviceKey.json"
     ),
   });
 }
+
+signInWithEmailAndPassword(auth, 'example@example.com', 'root123')
+  .then((userCredential) => {
+    return userCredential.user.getIdToken(); // Generate ID token
+  })
+  .then((idToken) => {
+    console.log("Bearer Token:", idToken);
+  })
+  .catch((error) => {
+    console.error("Error:", error.message);
+  });
+
 const db = getFirestore();
 
 const createUser = async (email, password, role) => {
@@ -209,68 +221,67 @@ const employees = {
 const attendance = {
   "2024-12-21": {
     E001: {
-      checkinTime: 1699286400000, 
+      checkinTime: 1699286400000,
       status: "On Time",
     },
     E002: {
-      checkinTime: 1699287000000, 
+      checkinTime: 1699287000000,
       status: "Late",
     },
     E003: {
-      checkinTime: null, 
+      checkinTime: null,
       status: "Absent",
     },
     E004: {
-      checkinTime: 1699285200000, 
+      checkinTime: 1699285200000,
       status: "On Time",
     },
   },
   "2024-12-22": {
     E001: {
-      checkinTime: 1699372800000, 
+      checkinTime: 1699372800000,
       status: "On Time",
     },
     E002: {
-      checkinTime: 1699373400000, 
+      checkinTime: 1699373400000,
       status: "Late",
     },
     E003: {
-      checkinTime: null, 
+      checkinTime: null,
       status: "Absent",
     },
     E004: {
-      checkinTime: 1699372200000, 
+      checkinTime: 1699372200000,
       status: "On Time",
     },
     E005: {
-      checkinTime: 1699374600000, 
+      checkinTime: 1699374600000,
       status: "Late",
     },
   },
   "2024-12-23": {
     E001: {
-      checkinTime: 1699462800000, 
+      checkinTime: 1699462800000,
       status: "On Time",
     },
     E002: {
-      checkinTime: 1699463400000, 
+      checkinTime: 1699463400000,
       status: "Late",
     },
     E006: {
-      checkinTime: 1699461000000, 
+      checkinTime: 1699461000000,
       status: "On Time",
     },
     E007: {
-      checkinTime: null, 
+      checkinTime: null,
       status: "Absent",
     },
     E010: {
-      checkinTime: 1699464000000, 
+      checkinTime: 1699464000000,
       status: "Late",
     },
-  }
+  },
 };
-
 
 const roles = {
   root: { permissions: ["create", "read", "update", "delete"] },
@@ -284,11 +295,11 @@ const users = {
   userId_11223: { email: "employee@exalt.com", role: "employee" },
 };
 
-const uploadData = async () => {
-  await uploadEmployees(employees);
-  await uploadAttendance(attendance);
-  await uploadRoles(roles);
-  await uploadUsers(users);
-};
+// const uploadData = async () => {
+//   await uploadEmployees(employees);
+//   await uploadAttendance(attendance);
+//   await uploadRoles(roles);
+//   await uploadUsers(users);
+// };
 
-uploadData();
+// uploadData();
