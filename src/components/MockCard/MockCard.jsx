@@ -20,7 +20,19 @@ function MockCard({ title, updatedTime, count = 0, linkTo = "/employees" }) {
       <footer className={styles.cardFooter}>
         <span>Updated: {updatedTime}</span>
         <Link to={linkTo}>
-          <Button>View All</Button>
+          <Button
+            disableElevation
+            disableFocusRipple
+            disableRipple
+            className={styles.viewButton}
+            // sx={{
+            //   ":hover": {
+            //     backgroundColor: "transparent",
+            //   },
+            // }}
+          >
+            View All
+          </Button>
         </Link>
       </footer>
     </Card>

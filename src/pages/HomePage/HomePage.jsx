@@ -1,7 +1,7 @@
 import { Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import styles from "./HomePage.module.css";
 import TableView from "../../components/Table/TableView";
-import { attendanceData } from "../../utils/dummyData";
+import { attendanceData, employeesData } from "../../utils/dummyData";
 import { Link, useSearchParams } from "react-router-dom";
 import MockCard from "../../components/MockCard/MockCard";
 import AttendanceCard from "../../components/AttendanceCard/AttendanceCard";
@@ -10,7 +10,7 @@ import { attendanceColumns } from "../../utils/constants";
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const viewMode = searchParams.get("view") || "table";
+  const viewMode = searchParams.get("view") || "cards";
 
   const handleViewChange = (event, newMode) => {
     if (newMode) {
@@ -24,13 +24,13 @@ export default function HomePage() {
         <MockCard
           title={"All Employees"}
           updatedTime="Just Now"
-          count={500}
+          count={employeesData.length}
           linkTo="/employees"
         />
         <MockCard
           title={"Total Attendance"}
           updatedTime="Just Now"
-          count={500}
+          count={attendanceData.length}
           linkTo="/attendance"
         />
       </section>
@@ -44,11 +44,11 @@ export default function HomePage() {
           aria-label="View Mode"
           className={styles.toggleButtons}
         >
-          <ToggleButton value="table" aria-label="Table View">
-            Table View
-          </ToggleButton>
           <ToggleButton value="cards" aria-label="Card View">
             Card View
+          </ToggleButton>
+          <ToggleButton value="table" aria-label="Table View">
+            Table View
           </ToggleButton>
         </ToggleButtonGroup>
 
