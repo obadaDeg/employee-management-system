@@ -8,7 +8,6 @@ import admin from "firebase-admin";
 import { getFirestore } from "firebase-admin/firestore";
 import fs from "fs";
 
-// Read the service account file
 const serviceAccount = JSON.parse(
   fs.readFileSync(
     "C:/Users/Obada.Daghlas/Desktop/employee-management-system/src/utils/scripts/serviceKey.json",
