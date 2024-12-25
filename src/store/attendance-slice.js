@@ -6,10 +6,14 @@ import {
   // deleteAttendance,
 } from "../utils/firebase-services";
 
-export const loadAttendance = createAsyncThunk(
-  "attendance/load",
-  fetchAttendance
-);
+export const loadAttendance = createAsyncThunk("attendance/load", async (_, { rejectWithValue }) => {
+  try {
+    await fetchAttendance();
+  } catch (error) {
+    console.error("Error loading attendance:", error.message);
+    return rejectWithValue(error.message);
+  }
+});
 
 export const createAttendance = createAsyncThunk(
   "attendance/create",

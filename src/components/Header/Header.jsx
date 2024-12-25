@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, setRole } from "../../store/auth-slice";
 import { HEADER_CONTENT } from "../../utils/static-content";
 import styles from "./Header.module.css";
-import { loadRoles } from "../../store/role-slice";
+import { fetchUsers } from "../../utils/firebase-services";
 
 function Header() {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
@@ -13,11 +13,6 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    
-    dispatch(setRole())
-  });
 
   const currentSection = location.pathname.split("/")[1] || "dashboard";
 
@@ -88,7 +83,7 @@ function Header() {
       <div className={styles.headerTitle}>
         <h6>
           {headerContent.title}
-          {location.pathname === "/" ? ` ${user}` : ""}
+          {location.pathname === "/" ? ` ${user || ""}` : ""}
         </h6>
         <span>{headerContent.subtitle}</span>
       </div>

@@ -46,7 +46,8 @@ export const checkAuthToken = async () => {
  */
 const apiRequest = async (url, method = "GET", body = null) => {
   try {
-    const token = await checkAuthToken(); // Ensure token validity
+    const token = localStorage.getItem("token"); // Ensure token validity
+
     if (!token) return; // Prevent further execution if token is invalid
 
     const headers = {
@@ -88,7 +89,18 @@ const apiRequest = async (url, method = "GET", body = null) => {
  */
 const fetchCollection = async (collection, params = "") => {
   const url = `${BASE_URL}/${collection}${params}`;
-  return await apiRequest(url);
+  const response = await apiRequest(url);
+
+  if (!response || !response.documents) {
+    console.warn(`No documents found in collection: ${collection}`);
+    return [];
+  }
+
+  // Map the response to include both document ID and fields
+  return response.documents.map((doc) => ({
+    id: doc.name.split("/").pop(), // Extract document ID from the name
+    ...doc.fields, // Spread fields for easier access
+  }));
 };
 
 /**
@@ -111,7 +123,23 @@ const manipulateDocument = async (
 
 // API Endpoint Functions
 
-export const fetchEmployees = async () => await fetchCollection("employees");
+export const fetchEmployees = async () => {
+    const employees = await fetchCollection("employees");
+    if (!employees.length) {
+        console.warn("No employees found");
+    }
+    return employees;
+};
+
+export const fetchAttendance = async () => {
+    const attendance = await fetchCollection("attendance");
+    if (!attendance.length) {
+        console.warn("No attendance records found");
+    }
+    console.log(attendance);
+    
+    return attendance;
+};
 
 export const fetchEmployee = async (employeeId) =>
   await manipulateDocument("employees", employeeId, "GET");
@@ -124,8 +152,6 @@ export const updateEmployee = async (employeeId, body) =>
 
 export const deleteEmployee = async (employeeId) =>
   await manipulateDocument("employees", employeeId, "DELETE");
-
-export const fetchAttendance = async () => await fetchCollection("attendance");
 
 export const fetchEmployeeAttendance = async (employeeId) =>
   await fetchCollection(
@@ -156,14 +182,3 @@ export function getTokenDuration() {
   const now = new Date();
   return expirationDate.getTime() - now.getTime();
 }
-
-export const logout = () => {
-  const auth = getAuth();
-  signOut(auth)
-    .then(() => {
-      redirect("/login");
-    })
-    .catch((error) => {
-      console.error("Sign out error: ", error);
-    });
-};

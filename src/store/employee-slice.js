@@ -6,8 +6,14 @@ import {
   deleteEmployee,
 } from "../utils/firebase-services";
 
-export const loadEmployees = createAsyncThunk("employees/load", fetchEmployees);
-
+export const loadEmployees = createAsyncThunk("employees/load", async (_, { rejectWithValue }) => {
+  try {
+    return await fetchEmployees();
+  } catch (error) {
+    console.error("Error loading employees:", error.message);
+    return rejectWithValue(error.message);
+  }
+});
 
 
 export const createEmployee = createAsyncThunk(
