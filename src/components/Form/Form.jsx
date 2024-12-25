@@ -1,24 +1,11 @@
 import PropTypes from "prop-types";
 import styles from "./Form.module.css";
 
-function Form({
-  fields,
-  onSubmit,
-  defaultValues = {},
-  className,
-  buttonTitle,
-}) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-    onSubmit(data);
-  };
-
+function Form({ fields, onSubmit, className, buttonTitle }) {
   return (
     <form
       className={`${styles.container} ${className || ""}`}
-      onSubmit={handleSubmit}
+      onSubmit={(e) => onSubmit(e)} // Pass the event to `onSubmit`
       noValidate
     >
       {fields.map(
@@ -29,6 +16,7 @@ function Form({
           required = false,
           options,
           error,
+          value,
           onChange,
           onBlur,
         }) => (
@@ -38,9 +26,9 @@ function Form({
               <select
                 id={id}
                 name={id}
-                defaultValue={defaultValues[id] || ""}
+                value={value || ""}
                 required={required}
-                onChange={() => onChange(event.target.value)}
+                onChange={(e) => onChange(e.target.value)}
                 onBlur={onBlur}
               >
                 <option value="" disabled>
@@ -57,14 +45,14 @@ function Form({
                 id={id}
                 name={id}
                 type={type}
-                defaultValue={defaultValues[id] || ""}
+                value={value || ""}
                 required={required}
                 className={error ? styles.inputError : ""}
-                onChange={() => onChange(event.target.value)}
+                onChange={(e) => onChange(e.target.value)}
                 onBlur={onBlur}
               />
             )}
-            {error && <p className={styles.error}>{error}</p>}{" "}
+            {error && <p className={styles.error}>{error}</p>}
           </div>
         )
       )}
@@ -87,11 +75,14 @@ Form.propTypes = {
         })
       ),
       error: PropTypes.string,
+      value: PropTypes.string,
+      onChange: PropTypes.func.isRequired,
+      onBlur: PropTypes.func,
     })
   ).isRequired,
   onSubmit: PropTypes.func.isRequired,
-  defaultValues: PropTypes.object,
   className: PropTypes.string,
+  buttonTitle: PropTypes.string,
 };
 
 export default Form;

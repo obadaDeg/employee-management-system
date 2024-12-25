@@ -6,6 +6,7 @@ import AllEmployeesPage from "./pages/AllEmployees/AllEmployees";
 import Attendance from "./pages/Attendance/Attendance";
 // import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/Auth/LoginPage";
+import { loginLoader } from "./utils/loginLoader";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
             index: true,
             element: (
               // <ProtectedRoute>
-                <AllEmployeesPage />
+              <AllEmployeesPage />
               // </ProtectedRoute>
             ),
           },
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
         path: "attendance",
         element: (
           // <ProtectedRoute>
-            <Attendance />
+          <Attendance />
           // </ProtectedRoute>
         ),
       },
@@ -45,8 +46,9 @@ const router = createBrowserRouter([
   },
   {
     path: "login",
-    element: <LoginPage />
-  }
+    element: <LoginPage />,
+    loader: loginLoader,
+  },
 ]);
 
 function App() {

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { validateForm } from "../utils/form-validation";
-
 const useForm = (initialValues, validationRules, onSubmit) => {
   const [formValues, setFormValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
@@ -21,12 +20,12 @@ const useForm = (initialValues, validationRules, onSubmit) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
     const validationErrors = validateForm(formValues, validationRules);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      onSubmit(formValues);
+      onSubmit(formValues); 
     }
   };
 

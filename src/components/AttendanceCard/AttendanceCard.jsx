@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import styles from "./AttendanceCard.module.css";
 import { defaultImage } from "../../utils/constants";
 
-export default function AttendanceCard({ data }) {
-  console.log(data);
-  
+export default function AttendanceCard({ data }) {  
   return (
     <Link to={`/employees/${data.id}`} className={styles.cardLink}>
       <div className={styles.card}>
