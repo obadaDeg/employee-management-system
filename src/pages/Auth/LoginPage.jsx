@@ -1,7 +1,6 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import Form from "../../components/Form/Form";
 import { loginFields } from "../../utils/constants";
 import styles from "./LoginPage.module.css";

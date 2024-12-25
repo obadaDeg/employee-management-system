@@ -27,6 +27,8 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.role = null;
+      localStorage.removeItem("token");
+      localStorage.removeItem("expiration");
     },
   },
   extraReducers: (builder) => {
@@ -36,10 +38,14 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.token = action.payload.idToken;
-        state.user = action.payload.email;
-        state.role = action.payload.role;
-      })
+        const { idToken, email, expiresIn } = action.payload;
+        state.token = idToken;
+        state.user = email;
+      
+        const expirationTime = new Date(new Date().getTime() + expiresIn * 1000);
+        localStorage.setItem("token", idToken);
+        localStorage.setItem("expiration", expirationTime.toISOString());
+      })      
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;

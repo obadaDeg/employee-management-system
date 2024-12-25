@@ -1,10 +1,40 @@
 import { Auth } from "firebase-admin/auth";
+import { redirect } from "react-router-dom";
+
+// const apiRequest = async (url, method = "GET", body = null) => {
+//   try {
+//     const headers = {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${Auth.currentUser.getIdToken()}`,
+//     };
+
+//     const options = {
+//       method,
+//       headers,
+//       body: body ? JSON.stringify(body) : null,
+//     };
+
+//     const response = await fetch(url, options);
+
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! Status: ${response.status}`);
+//     }
+
+//     return response.json();
+//   } catch (error) {
+//     return {
+//       message: error.message,
+//       status: error.status || 500,
+//     };
+//   }
+// };
 
 const apiRequest = async (url, method = "GET", body = null) => {
   try {
+    const token = getAuthToken();
     const headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${Auth.currentUser.getIdToken()}`,
+      Authorization: `Bearer ${token}`,
     };
 
     const options = {
@@ -27,6 +57,7 @@ const apiRequest = async (url, method = "GET", body = null) => {
     };
   }
 };
+
 
 const BASE_URL =
   "https://firestore.googleapis.com/v1/projects/employee-managemnt-system/databases/(default)/documents";
@@ -91,3 +122,38 @@ export const deleteAttendance = async (attendanceId) =>
 export const fetchRoles = async () => await fetchCollection("roles");
 
 export const fetchUsers = async () => await fetchCollection("users");
+
+export function getTokenDuration() {
+  const storedExpirationDate = localStorage.getItem("expiration");
+  const expirationDate = new Date(storedExpirationDate);
+  const now = new Date();
+  return expirationDate.getTime() - now.getTime();
+}
+
+export function getAuthToken() {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return null;
+  }
+
+  const tokenDuration = getTokenDuration();
+
+  if (tokenDuration < 0) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("expiration");
+    return "EXPIRED";
+  }
+
+  return token;
+}
+
+
+
+export function checkAuthToken() {
+  const token = getAuthToken();
+
+  if (!token || token === "EXPIRED") {
+    return redirect("/auth");
+  }
+}

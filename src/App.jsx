@@ -6,11 +6,13 @@ import AllEmployeesPage from "./pages/AllEmployees/AllEmployees";
 import Attendance from "./pages/Attendance/Attendance";
 // import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/Auth/LoginPage";
+import { checkAuthToken } from "./utils/firebase-services";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    loader: checkAuthToken,
     children: [
       {
         index: true,
