@@ -8,7 +8,7 @@ import Attendance from "./pages/Attendance/Attendance";
 import LoginPage from "./pages/Auth/LoginPage";
 import { loginLoader } from "./utils/loginLoader";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserFromToken, setUser } from "./store/auth-slice";
 import { fetchEmployees } from "./utils/firebase-services";
 import { loadEmployees } from "./store/employee-slice";
@@ -51,6 +51,7 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchUserFromToken = async () => {
@@ -66,14 +67,13 @@ function App() {
         );
         dispatch(loadEmployees());
         dispatch(loadAttendance());
-        
       } catch (error) {
         console.error("Error fetching user from token:", error.message);
       }
     };
 
     fetchUserFromToken();
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   return <RouterProvider router={router} />;
 }
