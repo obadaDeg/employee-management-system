@@ -24,7 +24,7 @@ export const getAuthToken = async () => {
 
 /**
  * Helper function to check token validity.
- * Redirects to the authentication page if the token is invalid or missing.
+ * Redirects to the login page if the token is invalid or missing.
  */
 export const checkAuthToken = async () => {
   const token = await getAuthToken();

@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   fetchAttendance,
   addAttendance,
-  updateAttendance,
-  deleteAttendance,
+  // updateAttendance,
+  // deleteAttendance,
 } from "../utils/firebase-services";
 
 export const loadAttendance = createAsyncThunk(

@@ -1,20 +1,30 @@
 import { Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import styles from "./HomePage.module.css";
 import TableView from "../../components/Table/TableView";
-import { attendanceData, employeesData } from "../../utils/dummyData";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import MockCard from "../../components/MockCard/MockCard";
 import AttendanceCard from "../../components/AttendanceCard/AttendanceCard";
 import { attendanceColumns } from "../../utils/constants";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { loadAttendance } from "../../redux/attendanceSlice";
+import { loadEmployees } from "../../redux/employeesSlice";
 
 export default function HomePage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [viewMode, setViewMode] = useState("cards");
+  const dispatch = useDispatch();
 
-  const viewMode = searchParams.get("view") || "cards";
+  const attendance = useSelector((state) => state.attendance.list);
+  const employees = useSelector((state) => state.employees.list);
+
+  useEffect(() => {
+    dispatch(loadAttendance());
+    dispatch(loadEmployees());
+  }, [dispatch]);
 
   const handleViewChange = (event, newMode) => {
     if (newMode) {
-      setSearchParams({ view: newMode });
+      setViewMode(newMode);
     }
   };
 
@@ -22,15 +32,15 @@ export default function HomePage() {
     <div id="home" className={styles.homeContainer}>
       <section className={styles.dashboardSection}>
         <MockCard
-          title={"All Employees"}
+          title="All Employees"
           updatedTime="Just Now"
-          count={employeesData.length}
+          count={employees.length}
           linkTo="/employees"
         />
         <MockCard
-          title={"Total Attendance"}
+          title="Total Attendance"
           updatedTime="Just Now"
-          count={attendanceData.length}
+          count={attendance.length}
           linkTo="/attendance"
         />
       </section>
@@ -55,17 +65,17 @@ export default function HomePage() {
         {viewMode === "table" ? (
           <TableView
             columns={attendanceColumns}
-            data={attendanceData}
+            data={attendance}
             showRows={5}
           />
         ) : (
           <div className={styles.cardViewContainer}>
             <div className={styles.cardView}>
-              {attendanceData.map((record) => (
+              {attendance.map((record) => (
                 <AttendanceCard key={record.id} data={record} />
               ))}
             </div>
-            <Link to={"attendance"} className={styles.viewMore}>
+            <Link to="/attendance" className={styles.viewMore}>
               <Button disableElevation disableFocusRipple disableTouchRipple>
                 View More
               </Button>

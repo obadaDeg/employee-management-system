@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -10,16 +10,23 @@ import Form from "../../components/Form/Form";
 import useForm from "../../hooks/useForm";
 import { useModal } from "../../hooks/useModal";
 import { employeeFields } from "../../utils/constants";
-import { employeesData } from "../../utils/dummyData";
 import {
+  loadEmployees,
   createEmployee,
   editEmployee,
   removeEmployee,
 } from "../../redux/employeesSlice";
-import stylesModule from "./AllEmployees.module.css";
+import styles from "./AllEmployees.module.css";
+import { useEffect } from "react";
 
 export default function AllEmployeesPage() {
   const dispatch = useDispatch();
+
+  const employees = useSelector((state) => state.employees.list);
+
+  useEffect(() => {
+    dispatch(loadEmployees());
+  }, [dispatch]);
 
   const addEmployeeModal = useModal();
   const editEmployeeModal = useModal();
@@ -45,22 +52,22 @@ export default function AllEmployeesPage() {
     deleteEmployeeModal.closeModal();
   };
 
-  const data = employeesData.map((employee) => ({
+  const tableData = employees.map((employee) => ({
     ...employee,
     actions: [
       <Link key={`view-${employee.id}`} to={`/employees/${employee.id}`}>
-        <VisibilityIcon fontSize="small" className={stylesModule.actionIcon} />
+        <VisibilityIcon fontSize="small" className={styles.actionIcon} />
       </Link>,
       <EditIcon
         key={`edit-${employee.id}`}
         fontSize="small"
-        className={stylesModule.actionIcon}
+        className={styles.actionIcon}
         onClick={() => editEmployeeModal.openModal(employee)}
       />,
       <DeleteIcon
         key={`delete-${employee.id}`}
         fontSize="small"
-        className={stylesModule.actionIcon}
+        className={styles.actionIcon}
         onClick={() => deleteEmployeeModal.openModal(employee.id)}
       />,
     ],
@@ -73,8 +80,6 @@ export default function AllEmployeesPage() {
         color="primary"
         onClick={addEmployeeModal.openModal}
         disableElevation
-        disableFocusRipple
-        disableRipple
         sx={{ margin: "0 1rem" }}
       >
         Add New Employee
@@ -132,7 +137,7 @@ export default function AllEmployeesPage() {
         </div>
       </Modal>
 
-      <TableView columns={employeeFields} data={data} />
+      <TableView columns={employeeFields} data={tableData} />
     </>
   );
 }

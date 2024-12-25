@@ -1,16 +1,19 @@
+import { Outlet } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import SideNavbar from "../../components/SideNavBar/SideNavbar";
-import { Outlet } from "react-router-dom";
-import styles from './RootLayout.module.css'
+import styles from "./RootLayout.module.css";
+import ErrorBoundary from "../../components/ErrorBoundary/ErrorBoundary";
 
 export default function RootLayout() {
   return (
-    <>
+    <div className={styles.layoutContainer}>
       <SideNavbar />
-      <main id={styles.mainContent}>
+      <div className={styles.contentContainer}>
         <Header />
-        <Outlet />
-      </main>
-    </>
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
+      </div>
+    </div>
   );
 }
