@@ -1,37 +1,51 @@
-import { Auth } from "firebase-admin/auth";
+import firebase from "firebase/compat/app";
 import { redirect } from "react-router-dom";
 
-// const apiRequest = async (url, method = "GET", body = null) => {
-//   try {
-//     const headers = {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${Auth.currentUser.getIdToken()}`,
-//     };
+const BASE_URL =
+  "https://firestore.googleapis.com/v1/projects/employee-managemnt-system/databases/(default)/documents";
 
-//     const options = {
-//       method,
-//       headers,
-//       body: body ? JSON.stringify(body) : null,
-//     };
+/**
+ * Helper function to fetch and validate the authentication token.
+ * Ensures that the token is valid and current.
+ */
+export const getAuthToken = async () => {
+  try {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const token = await user.getIdToken(true); // Force refresh to ensure token validity
+      return token;
+    }
+    throw new Error("No user is logged in.");
+  } catch (error) {
+    console.error("Error fetching auth token:", error.message);
+    return null;
+  }
+};
 
-//     const response = await fetch(url, options);
+/**
+ * Helper function to check token validity.
+ * Redirects to the authentication page if the token is invalid or missing.
+ */
+export const checkAuthToken = async () => {
+  const token = await getAuthToken();
+  if (!token) {
+    return redirect("/login"); 
+  }
+  return token;
+};
 
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
-//     }
-
-//     return response.json();
-//   } catch (error) {
-//     return {
-//       message: error.message,
-//       status: error.status || 500,
-//     };
-//   }
-// };
-
+/**
+ * Generalized API request function with token handling and enhanced error checks.
+ * @param {string} url - API endpoint URL.
+ * @param {string} method - HTTP method (GET, POST, PATCH, DELETE).
+ * @param {object|null} body - Request body for POST/PATCH requests.
+ * @returns {Promise<object>} - JSON response from the API or error object.
+ */
 const apiRequest = async (url, method = "GET", body = null) => {
   try {
-    const token = getAuthToken();
+    const token = await checkAuthToken(); // Ensure token validity
+    if (!token) return; // Prevent further execution if token is invalid
+
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -46,11 +60,14 @@ const apiRequest = async (url, method = "GET", body = null) => {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      const errorData = await response.json();
+      console.error("API request failed:", errorData);
+      throw new Error(`HTTP error! Status: ${response.status} - ${errorData.message}`);
     }
 
-    return response.json();
+    return await response.json();
   } catch (error) {
+    console.error("Error in apiRequest:", error.message);
     return {
       message: error.message,
       status: error.status || 500,
@@ -58,35 +75,31 @@ const apiRequest = async (url, method = "GET", body = null) => {
   }
 };
 
-
-const BASE_URL =
-  "https://firestore.googleapis.com/v1/projects/employee-managemnt-system/databases/(default)/documents";
-
-export const getUserAuthorization = async (email, password) => {
-  const url =
-    "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAQQLAZWXtqrxYzDSvIzDpjUo7VVcYe3uw";
-  const body = {
-    email,
-    password,
-    returnSecureToken: true,
-  };
-  return await apiRequest(url, "POST", body);
-};
-
+/**
+ * Fetch data from a collection in Firestore.
+ * @param {string} collection - Collection name.
+ * @param {string} params - Query parameters (optional).
+ * @returns {Promise<object>} - Collection data.
+ */
 const fetchCollection = async (collection, params = "") => {
   const url = `${BASE_URL}/${collection}${params}`;
   return await apiRequest(url);
 };
 
-const manipulateDocument = async (
-  collection,
-  documentId,
-  method,
-  body = null
-) => {
+/**
+ * Perform operations on a specific document in a Firestore collection.
+ * @param {string} collection - Collection name.
+ * @param {string} documentId - Document ID.
+ * @param {string} method - HTTP method (GET, PATCH, DELETE).
+ * @param {object|null} body - Request body for PATCH requests.
+ * @returns {Promise<object>} - Document data.
+ */
+const manipulateDocument = async (collection, documentId, method, body = null) => {
   const url = `${BASE_URL}/${collection}/${documentId}`;
   return await apiRequest(url, method, body);
 };
+
+// API Endpoint Functions
 
 export const fetchEmployees = async () => await fetchCollection("employees");
 
@@ -105,10 +118,7 @@ export const deleteEmployee = async (employeeId) =>
 export const fetchAttendance = async () => await fetchCollection("attendance");
 
 export const fetchEmployeeAttendance = async (employeeId) =>
-  await fetchCollection(
-    "attendance",
-    `?orderBy=employeeId&equalTo=${employeeId}`
-  );
+  await fetchCollection("attendance", `?orderBy=employeeId&equalTo=${employeeId}`);
 
 export const addAttendance = async (body) =>
   await apiRequest(`${BASE_URL}/attendance`, "POST", body);
@@ -123,37 +133,13 @@ export const fetchRoles = async () => await fetchCollection("roles");
 
 export const fetchUsers = async () => await fetchCollection("users");
 
+/**
+ * Get the duration until the token expires.
+ * @returns {number} - Remaining duration in milliseconds.
+ */
 export function getTokenDuration() {
   const storedExpirationDate = localStorage.getItem("expiration");
   const expirationDate = new Date(storedExpirationDate);
   const now = new Date();
   return expirationDate.getTime() - now.getTime();
-}
-
-export function getAuthToken() {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    return null;
-  }
-
-  const tokenDuration = getTokenDuration();
-
-  if (tokenDuration < 0) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("expiration");
-    return "EXPIRED";
-  }
-
-  return token;
-}
-
-
-
-export function checkAuthToken() {
-  const token = getAuthToken();
-
-  if (!token || token === "EXPIRED") {
-    return redirect("/auth");
-  }
 }
