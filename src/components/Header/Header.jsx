@@ -6,13 +6,16 @@ import { logout, setRole } from "../../store/auth-slice";
 import { HEADER_CONTENT } from "../../utils/static-content";
 import styles from "./Header.module.css";
 import { fetchUsers } from "../../utils/firebase-services";
+import useAuth from "../../hooks/useAuth";
 
 function Header() {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
+  // const { user, token } = useSelector((state) => state.auth);
+  const user = useAuth();
+
 
   const currentSection = location.pathname.split("/")[1] || "dashboard";
 
@@ -33,6 +36,11 @@ function Header() {
     dispatch(logout());
     navigate("/login");
   };
+
+  // console.log(token, 'token');
+  
+  // console.log(user);
+  
 
   const renderProfileButton = () => {
     if (user) {
@@ -83,7 +91,7 @@ function Header() {
       <div className={styles.headerTitle}>
         <h6>
           {headerContent.title}
-          {location.pathname === "/" ? ` ${user || ""}` : ""}
+          {location.pathname === "/" ? ` ${user?.displayName || user?.email || ""}` : ""}
         </h6>
         <span>{headerContent.subtitle}</span>
       </div>

@@ -16,7 +16,7 @@ function StatusMessage({ status, error, dataName }) {
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const {
-    list: attendanceData,
+    list: attendance,
     status: attendanceStatus,
     error: attendanceError,
   } = useSelector((state) => state.attendance);
@@ -27,6 +27,10 @@ export default function HomePage() {
   } = useSelector((state) => state.employees);
 
   const viewMode = searchParams.get("view") || "cards";
+  const attendanceData = attendance[attendance.length - 1] || [];
+  
+  console.log(attendance);  
+
 
   const handleViewChange = (event, newMode) => {
     if (newMode) {
@@ -35,9 +39,10 @@ export default function HomePage() {
   };
 
   const renderAttendanceCards = () => {
-    return attendanceData.map((record) => (
-      <AttendanceCard key={record.id} data={record} />
-    ));
+    return Object.keys(attendanceData).map((key) => {
+      console.log(attendanceData[key]);
+      return <AttendanceCard key={key} data={attendanceData[key]} />;
+    });
   };
 
   return (
@@ -57,7 +62,7 @@ export default function HomePage() {
         />
       </section>
       <section id="attendance-overview" className={styles.attendanceSection}>
-        <h2 className={styles.sectionTitle}>Attendance Overview</h2>
+        <h2 className={styles.sectionTitle}>Today's Attendance Overview</h2>
 
         <StatusMessage
           status={attendanceStatus.load}
