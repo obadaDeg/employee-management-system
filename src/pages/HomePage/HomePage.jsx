@@ -148,7 +148,7 @@ export default function HomePage() {
                   id={item.id}
                   name={item.name}
                   image={item.image}
-                  date={item.date}
+                  date={item.date || "N/A"}
                   status={item.status}
                   timeIn={item.checkinTime}
                 />

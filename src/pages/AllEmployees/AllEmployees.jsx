@@ -10,7 +10,7 @@ import Modal from "../../components/Modal/Modal";
 import Form from "../../components/Form/Form";
 import useForm from "../../hooks/useForm";
 import { useModal } from "../../hooks/useModal";
-import { employeeFields } from "../../utils/constants";
+import { defaultImage, employeeFields } from "../../utils/constants";
 import {
   loadEmployees,
   createEmployee,
@@ -19,9 +19,29 @@ import {
 } from "../../store/employee-slice";
 import styles from "./AllEmployees.module.css";
 
+const transformEmployeeData = (employees) => {
+  if (!Array.isArray(employees)) return [];
+
+  return employees.map((employee) => {
+    const safeEmployee = employee || {}; // Ensure employee is at least an empty object
+    return {
+      id: safeEmployee.id || "Unknown ID",
+      name: safeEmployee.name?.stringValue || "Unknown Employee",
+      image: safeEmployee.image?.stringValue || defaultImage,
+      designation: safeEmployee.designation?.stringValue || "Unknown",
+      type: safeEmployee.type?.stringValue || "Office",
+      status: safeEmployee.status?.stringValue || "Unknown",
+    };
+  });
+};
+
 export default function AllEmployeesPage() {
   const dispatch = useDispatch();
-  const { list: employees, status, error } = useSelector((state) => state.employees);
+  const {
+    list: rawEmployees,
+    status,
+    error,
+  } = useSelector((state) => state.employees);
 
   useEffect(() => {
     dispatch(loadEmployees());
@@ -51,8 +71,14 @@ export default function AllEmployeesPage() {
     deleteEmployeeModal.closeModal();
   };
 
+  const employees = transformEmployeeData(rawEmployees || []);
+
   const tableData = employees.map((employee) => ({
-    ...employee,
+    name: employee.name || "N/A",
+    id: employee.id || "N/A",
+    designation: employee.designation || "N/A",
+    type: employee.type || "N/A",
+    status: employee.status || "N/A",
     actions: [
       <Link key={`view-${employee.id}`} to={`/employees/${employee.id}`}>
         <VisibilityIcon fontSize="small" className={styles.actionIcon} />
@@ -94,14 +120,12 @@ export default function AllEmployeesPage() {
           sx={{ margin: "0 1rem", width: "300px" }}
           onChange={(e) => {
             const searchValue = e.target.value.toLowerCase();
-            // You could implement filtering logic here
           }}
         />
       </div>
 
       <TableView columns={employeeFields} data={tableData} />
 
-      {/* Add Employee Modal */}
       <Modal
         isOpen={addEmployeeModal.isOpen}
         title="Add New Employee"
@@ -120,7 +144,6 @@ export default function AllEmployeesPage() {
         />
       </Modal>
 
-      {/* Edit Employee Modal */}
       <Modal
         isOpen={editEmployeeModal.isOpen}
         title="Edit Employee"
@@ -139,7 +162,6 @@ export default function AllEmployeesPage() {
         />
       </Modal>
 
-      {/* Delete Employee Modal */}
       <Modal
         isOpen={deleteEmployeeModal.isOpen}
         title="Confirm Deletion"
