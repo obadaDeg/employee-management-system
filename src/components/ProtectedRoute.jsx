@@ -5,9 +5,7 @@ import { useSelector } from "react-redux";
 
 export default function ProtectedRoute({ children, allowedRoles = "All" }) {
   // const user = useAuth();
-  const { user } = useSelector((state) => state.auth);
-  console.log(user);
-  const role = user?.role;
+  const { user, role } = useSelector((state) => state.auth);
 
   if (allowedRoles === "All") return children;
 
