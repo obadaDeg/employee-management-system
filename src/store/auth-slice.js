@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {
+  createUserWithEmailAndPassword,
   getAuth,
   getIdTokenResult,
   signInWithEmailAndPassword,
@@ -45,6 +46,34 @@ export const login = createAsyncThunk(
   }
 );
 
+export const createNewAdmin = createAsyncThunk(
+  "auth/createNewAdmin",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      console.log(user);      
+      
+      const idTokenResult = await getIdTokenResult(user);
+      const role = idTokenResult.claims.role || null;
+
+      return {
+        idToken: idTokenResult.token,
+        email: user.email,
+        role,
+        expiresIn: 3600,
+      };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
 export const getUserFromToken = async () => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -65,6 +94,9 @@ export const getUserFromToken = async () => {
     const role = idTokenResult.claims.role || null;
     const email = user.email;
 
+    console.log(role);
+    
+
     return {
       token,
       email,
@@ -82,6 +114,7 @@ const authSlice = createSlice({
     role: null,
     status: "idle",
     error: null,
+    creatingStatus: "idle",
   },
   reducers: {
     logout(state) {

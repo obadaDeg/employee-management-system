@@ -4,8 +4,12 @@ import styles from "./SideNavBar.module.css";
 import DashboardLogo from "../../assets/DashboardLogo";
 import EmployeesIcon from "../../assets/EmployeesIcon";
 import CalendarIcon from "../../assets/CalendarIcon";
+import { useSelector } from "react-redux";
+import { Button } from "@mui/material";
 
 export default function SideNavbar() {
+  const { user, role } = useSelector((state) => state.auth);
+
   return (
     <>
       <nav className={styles.sideNavbar}>
@@ -51,6 +55,18 @@ export default function SideNavbar() {
               )}
             </NavLink>
           </li>
+          {user && role == "root" && (
+            <li>
+              <Button
+                variant="contained"
+                disableElevation
+                disableFocusRipple
+                disableRipple
+              >
+                Add New Admin
+              </Button>
+            </li>
+          )}
         </menu>
       </nav>
     </>

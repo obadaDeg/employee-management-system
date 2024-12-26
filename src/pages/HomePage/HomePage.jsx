@@ -53,7 +53,7 @@ export default function HomePage() {
         />
       </section>
       <section id="attendance-overview" className={styles.attendanceSection}>
-        <h2 className={styles.sectionTitle}>Today's Attendance Overview</h2>
+        <h2 className={styles.sectionTitle}>Today&apos;s Attendance Overview</h2>
 
         <StatusMessage
           status={attendanceStatus.load}

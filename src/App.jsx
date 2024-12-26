@@ -7,15 +7,16 @@ import Attendance from "./pages/Attendance/Attendance";
 
 import LoginPage from "./pages/Auth/LoginPage";
 import { loginLoader } from "./utils/loginLoader";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserFromToken, setUser } from "./store/auth-slice";
-import { fetchEmployees } from "./utils/firebase-services";
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { logout, setUser } from "./store/auth-slice";
 import { loadEmployees } from "./store/employee-slice";
 import { loadAttendance } from "./store/attendance-slice";
 import EmployeeDetailsPage from "./pages/EmployeeDetailsPage/EmployeeDetailsPage";
 import ErrorPage from "./pages/RootLayout/ErrorPage";
 import ErrorEmployee from "./pages/AllEmployees/ErrorEmployee";
+import ProtectedRoute from "./components/ProtectedRoute";
+import useAuth from "./hooks/useAuth";
 
 const router = createBrowserRouter([
   {
@@ -25,25 +26,46 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: (
+          <ProtectedRoute allowedRoles="All">
+            <HomePage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "employees",
+        // element: (
+        //   <ProtectedRoute allowedRoles={["admin", "root"]}>
+        //     <EmployeeLayout />
+        //   </ProtectedRoute>
+        // ),
         errorElement: <ErrorEmployee />,
         children: [
           {
             index: true,
-            element: <AllEmployeesPage />,
+            element: (
+              <ProtectedRoute allowedRoles={["admin", "root"]}>
+                <AllEmployeesPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: ":id",
-            element: <EmployeeDetailsPage />,
+            element: (
+              <ProtectedRoute allowedRoles={["admin", "root"]}>
+                <EmployeeDetailsPage />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
       {
         path: "attendance",
-        element: <Attendance />,
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "root"]}>
+            <Attendance />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -55,30 +77,44 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  // const appInit = useRef(true);
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
+  const user = useAuth();
+  // dispatch(
+  //   setUser({
+  //     email: user.email,
+  //     role: user.role,
+  //     token: user.token,
+  //   })
+  // );
+
+  // const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    // if (appInit.current) {
+    //   appInit.current = false;
+    //   return;
+    // }
+
     const fetchUserFromToken = async () => {
       try {
-        const user = await getUserFromToken();
-
         dispatch(
           setUser({
             email: user.email,
             role: user.role,
-            token: user.token,
+            token: user.accessToken,
           })
         );
         dispatch(loadEmployees());
         dispatch(loadAttendance());
       } catch (error) {
         console.error("Error fetching user from token:", error.message);
+        // dispatch(logout());
       }
     };
 
     fetchUserFromToken();
-  }, [dispatch, token]);
+  }, [dispatch, user]);
 
   return <RouterProvider router={router} />;
 }

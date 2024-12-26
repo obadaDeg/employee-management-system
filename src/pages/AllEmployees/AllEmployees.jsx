@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, TextField, CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
@@ -10,7 +10,11 @@ import Modal from "../../components/Modal/Modal";
 import Form from "../../components/Form/Form";
 import useForm from "../../hooks/useForm";
 import { useModal } from "../../hooks/useModal";
-import { defaultImage, employeeFields } from "../../utils/constants";
+import {
+  defaultImage,
+  employeeColumns,
+  employeeFields,
+} from "../../utils/constants";
 import {
   loadEmployees,
   createEmployee,
@@ -18,13 +22,12 @@ import {
   removeEmployee,
 } from "../../store/employee-slice";
 import styles from "./AllEmployees.module.css";
-import { employeesData } from "../../utils/dummyData";
 
 const transformEmployeeData = (employees) => {
   if (!Array.isArray(employees)) return [];
 
   return employees.map((employee) => {
-    const safeEmployee = employee || {}; 
+    const safeEmployee = employee || {};
     return {
       id: safeEmployee.id || "Unknown ID",
       name: safeEmployee.name?.stringValue || "Unknown Employee",
@@ -40,13 +43,19 @@ export default function AllEmployeesPage() {
   const dispatch = useDispatch();
   const {
     list: rawEmployees,
-    status,
-    error,
+    status: loadStatus,
+    error: loadError,
+    status: removeStatus,
+    error: removeError,
   } = useSelector((state) => state.employees);
+
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     dispatch(loadEmployees());
   }, [dispatch]);
+
+  const { user, role } = useSelector((state) => state.auth);
 
   const addEmployeeModal = useModal();
   const editEmployeeModal = useModal();
@@ -55,6 +64,7 @@ export default function AllEmployeesPage() {
   const addEmployeeForm = useForm({}, {}, (formValues) => {
     dispatch(createEmployee(formValues));
     addEmployeeModal.closeModal();
+    setMessage("Employee added successfully!");
   });
 
   const editEmployeeForm = useForm({}, {}, (formValues) => {
@@ -65,20 +75,30 @@ export default function AllEmployeesPage() {
       })
     );
     editEmployeeModal.closeModal();
+    setMessage("Employee updated successfully!");
   });
 
   const handleDelete = () => {
-    dispatch(removeEmployee(deleteEmployeeModal.context));
-    deleteEmployeeModal.closeModal();
+    try {
+      dispatch(removeEmployee(deleteEmployeeModal.context));
+      setMessage("Employee deleted successfully!");
+    } catch (error) {
+      setMessage(`Error deleting employee: ${error.message}`);
+    } finally {
+      deleteEmployeeModal.closeModal();
+    }
   };
 
-  const employees = transformEmployeeData(rawEmployees || []);
+  const employees = useMemo(
+    () => transformEmployeeData(rawEmployees || []),
+    [rawEmployees]
+  );
 
   const tableData = employees.map((employee) => ({
     name: employee.name || "N/A",
     id: employee.id || "N/A",
     designation: employee.designation || "N/A",
-
+    image: employee.image || defaultImage,
     type: employee.type || "N/A",
     status: employee.status || "N/A",
     actions: [
@@ -100,33 +120,38 @@ export default function AllEmployeesPage() {
     ],
   }));
 
-  if (status === "loading") return <CircularProgress />;
-  if (status === "failed") return <p>Error loading employees: {error}</p>;
+  if (loadStatus === "loading") return <CircularProgress />;
+  if (loadStatus === "failed")
+    return <p>Error loading employees: {loadError}</p>;
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={addEmployeeModal.openModal}
-          disableElevation
-          sx={{ margin: "0 1rem" }}
-        >
-          Add New Employee
-        </Button>
-        <TextField
-          placeholder="Search employees..."
-          variant="outlined"
-          size="small"
-          sx={{ margin: "0 1rem", width: "300px" }}
-          onChange={(e) => {
-            const searchValue = e.target.value.toLowerCase();
-          }}
-        />
+        {user && (role === "root" || role === "admin") && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={addEmployeeModal.openModal}
+            disableElevation
+            sx={{ margin: "0 1rem" }}
+            disabled={loadStatus === "loading"}
+          >
+            {loadStatus === "loading" ? (
+              <CircularProgress size={20} />
+            ) : (
+              "Add New Employee"
+            )}
+          </Button>
+        )}
       </div>
 
-      <TableView columns={employeeFields} data={tableData} />
+      {employees.length === 0 && (
+        <p>No employees found. Add some to get started!</p>
+      )}
+
+      <TableView columns={employeeColumns} data={tableData} />
+
+      {message && <p>{message}</p>}
 
       <Modal
         isOpen={addEmployeeModal.isOpen}
@@ -134,16 +159,13 @@ export default function AllEmployeesPage() {
         onClose={addEmployeeModal.closeModal}
       >
         <Form
-          fields={employeeFields.map((field) => {
-            return {
-              ...field,
-              value: addEmployeeForm.formValues[field.id] || "",
-              error: addEmployeeForm.errors[field.id] || null,
-              onChange: (value) =>
-                addEmployeeForm.handleChange(field.id, value),
-              onBlur: () => addEmployeeForm.handleBlur(field.id),
-            };
-          })}
+          fields={employeeFields.map((field) => ({
+            ...field,
+            value: addEmployeeForm.formValues[field.id] || "",
+            error: addEmployeeForm.errors[field.id] || null,
+            onChange: (value) => addEmployeeForm.handleChange(field.id, value),
+            onBlur: () => addEmployeeForm.handleBlur(field.id),
+          }))}
           onSubmit={addEmployeeForm.handleSubmit}
           buttonTitle="Add Employee"
         />
@@ -163,7 +185,7 @@ export default function AllEmployeesPage() {
             onBlur: () => editEmployeeForm.handleBlur(field.id),
           }))}
           onSubmit={editEmployeeForm.handleSubmit}
-          buttonTitle="Save Changes"
+          buttonTitle={status.edit === "loading" ? <CircularProgress /> : "Save"}
         />
       </Modal>
 
@@ -172,15 +194,34 @@ export default function AllEmployeesPage() {
         title="Confirm Deletion"
         onClose={deleteEmployeeModal.closeModal}
       >
-        <p>Are you sure you want to delete this employee?</p>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Button variant="outlined" color="error" onClick={handleDelete}>
-            Delete
-          </Button>
-          <Button variant="outlined" onClick={deleteEmployeeModal.closeModal}>
-            Cancel
-          </Button>
-        </div>
+        {removeStatus === "loading" && <CircularProgress />}
+        {removeStatus === "failed" && (
+          <p style={{ color: "red" }}>Error: {removeError}</p>
+        )}
+        {removeStatus === "succeeded" && (
+          <p style={{ color: "green" }}>Deleted successfully!</p>
+        )}
+        {removeStatus !== "loading" && (
+          <>
+            <p>Are you sure you want to delete this employee?</p>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleDelete}
+                disabled={removeStatus === "loading"}
+              >
+                Delete
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={deleteEmployeeModal.closeModal}
+              >
+                Cancel
+              </Button>
+            </div>
+          </>
+        )}
       </Modal>
     </div>
   );

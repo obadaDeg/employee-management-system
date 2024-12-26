@@ -10,30 +10,32 @@ export default function EmployeeDetailsPage() {
   const { list: attendanceData } = useSelector((state) => state.attendance);
 
   const employee = employeesData.find((emp) => emp.id === id);
+  console.log(employee, "employee");
 
   if (!employee) {
     return <p className={styles.notFound}>Employee not found</p>;
   }
 
-  const employeeAttendance = attendanceData
-    .flatMap((record) => {
-      const attendance = record[id]?.mapValue?.fields || null;
-      if (!attendance) return null;
+  const employeeAttendance = attendanceData.flatMap((record) => {
+    const attendanceRecord = record[id];
+    if (!attendanceRecord || !attendanceRecord.mapValue?.fields) {
+      console.warn(`Invalid attendance data for id: ${id}`, record);
+      return [];
+    }
 
-      return {
-        date: new Date(record.date),
-        checkinTime: attendance.checkinTime?.integerValue
-          ? new Date(
-              Number(attendance.checkinTime.integerValue)
-            ).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          : "N/A",
-        status: attendance.status?.stringValue || "Unknown",
-      };
-    })
-    .filter(Boolean);
+    const fields = attendanceRecord.mapValue.fields;
+    const rawCheckinTime = fields.checkinTime?.integerValue;
+
+    return {
+      date: new Date(record.id),
+      status: fields.status?.stringValue || "Unknown",
+      checkinTime: rawCheckinTime
+        ? new Date(parseInt(rawCheckinTime, 10) * 1000)
+        : "Invalid Time",
+    };
+  });
+
+  console.log(employeeAttendance, "employeeAttendance");
 
   return (
     <div className={styles.employeeDetailsContainer}>
@@ -52,17 +54,19 @@ export default function EmployeeDetailsPage() {
         {employeeAttendance.length === 0 ? (
           <p>No attendance records available.</p>
         ) : (
-          employeeAttendance.map((record, index) => (
-            <AttendanceCard
+          employeeAttendance.map((record, index) => {
+            console.log(record);
+            
+            return <AttendanceCard
               key={index}
               id={id}
               name={employee.name?.stringValue}
               image={employee.image?.stringValue}
               date={record.date.toLocaleDateString()}
               status={record.status}
-              timeIn={record.checkinTime}
-            />
-          ))
+              timeIn={record.checkinTime.toLocaleTimeString()}
+            />;
+          })
         )}
       </section>
     </div>

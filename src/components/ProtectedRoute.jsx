@@ -1,15 +1,27 @@
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
+// import useAuth from "../hooks/useAuth";
+import { useSelector } from "react-redux";
 
-export default function ProtectedRoute({ children, allowedRoles }) {
-  const user = useSelector((state) => state.auth.user);
-  if (!user || !allowedRoles.includes(user.role))
+export default function ProtectedRoute({ children, allowedRoles = "All" }) {
+  // const user = useAuth();
+  const { user, role } = useSelector((state) => state.auth);
+
+  if (allowedRoles === "All") return children;
+
+  if (!user || !allowedRoles.includes(role)) {
     return <Navigate to="/" />;
+  }
+
+  console.log("Role check passed:", role);
+
   return children;
 }
 
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,
-  allowedRoles: PropTypes.array.isRequired,
+  allowedRoles: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
 };

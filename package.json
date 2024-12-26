@@ -17,6 +17,7 @@
     "@mui/x-date-pickers": "^7.23.3",
     "@reduxjs/toolkit": "^2.5.0",
     "admin": "^1.4.1",
+    "date-fns": "^2.30.0",
     "dayjs": "^1.11.13",
     "firebase": "^11.1.0",
     "firebase-admin": "^13.0.2",

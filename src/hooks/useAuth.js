@@ -6,9 +6,14 @@ const useAuth = () => {
 
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        firebaseUser.getIdTokenResult().then((idTokenResult) => {
+          setUser({
+            ...firebaseUser,
+            role: idTokenResult.claims.role,
+          });
+        });
       } else {
         setUser(null);
       }
