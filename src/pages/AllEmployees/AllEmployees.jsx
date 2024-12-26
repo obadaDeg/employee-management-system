@@ -43,10 +43,8 @@ export default function AllEmployeesPage() {
   const dispatch = useDispatch();
   const {
     list: rawEmployees,
-    status: loadStatus,
-    error: loadError,
-    status: removeStatus,
-    error: removeError,
+    status,
+    error,
   } = useSelector((state) => state.employees);
 
   const [message, setMessage] = useState("");
@@ -120,9 +118,9 @@ export default function AllEmployeesPage() {
     ],
   }));
 
-  if (loadStatus === "loading") return <CircularProgress />;
-  if (loadStatus === "failed")
-    return <p>Error loading employees: {loadError}</p>;
+  if (status.load === "loading") return <CircularProgress />;
+  if (status.load === "failed")
+    return <p>Error loading employees: {error.load}</p>;
 
   return (
     <div className={styles.container}>
@@ -134,9 +132,9 @@ export default function AllEmployeesPage() {
             onClick={addEmployeeModal.openModal}
             disableElevation
             sx={{ margin: "0 1rem" }}
-            disabled={loadStatus === "loading"}
+            disabled={status.load === "loading"}
           >
-            {loadStatus === "loading" ? (
+            {status.load === "loading" ? (
               <CircularProgress size={20} />
             ) : (
               "Add New Employee"
@@ -194,14 +192,14 @@ export default function AllEmployeesPage() {
         title="Confirm Deletion"
         onClose={deleteEmployeeModal.closeModal}
       >
-        {removeStatus === "loading" && <CircularProgress />}
-        {removeStatus === "failed" && (
-          <p style={{ color: "red" }}>Error: {removeError}</p>
+        {status.remove === "loading" && <CircularProgress />}
+        {status.remove === "failed" && (
+          <p style={{ color: "red" }}>Error: {status.remove}</p>
         )}
-        {removeStatus === "succeeded" && (
+        {status.remove === "succeeded" && (
           <p style={{ color: "green" }}>Deleted successfully!</p>
         )}
-        {removeStatus !== "loading" && (
+        {status.remove !== "loading" && (
           <>
             <p>Are you sure you want to delete this employee?</p>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -209,7 +207,7 @@ export default function AllEmployeesPage() {
                 variant="outlined"
                 color="error"
                 onClick={handleDelete}
-                disabled={removeStatus === "loading"}
+                disabled={status.remove === "loading"}
               >
                 Delete
               </Button>
