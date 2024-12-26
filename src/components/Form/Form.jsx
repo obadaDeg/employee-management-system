@@ -2,10 +2,16 @@ import PropTypes from "prop-types";
 import styles from "./Form.module.css";
 
 function Form({ fields, onSubmit, className, buttonTitle }) {
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit();
+  }
+  
   return (
     <form
       className={`${styles.container} ${className || ""}`}
-      onSubmit={(e) => onSubmit(e)} // Pass the event to `onSubmit`
+      onSubmit={(e) => onSubmit(e)}
       noValidate
     >
       {fields.map(

@@ -9,10 +9,11 @@ import {
   TablePagination,
   TableContainer,
   Paper,
+  TextField,
 } from "@mui/material";
-import styles from "./TableView.module.css";
 import { NavLink } from "react-router-dom";
 import { defaultImage } from "../../utils/constants";
+import styles from "./TableView.module.css"; // Ensure you include relevant styles here.
 
 function TableView({
   columns,
@@ -23,15 +24,20 @@ function TableView({
 }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  console.log(data);
-   
-
-  const paginatedRows = Array.isArray(data)
-    ? showRows
-      ? data.slice(0, showRows)
-      : data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+  // Filter data based on the search term
+  const filteredData = Array.isArray(data)
+    ? data.filter((row) =>
+        columns.some((column) =>
+          String(row[column.key]).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      )
     : [];
+
+  const paginatedRows = showRows
+    ? filteredData.slice(0, showRows)
+    : filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -40,18 +46,36 @@ function TableView({
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };  
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    setPage(0); // Reset to the first page on a new search
+  };
 
   return (
     <Paper
       sx={{
         margin: "1rem",
+        padding: "1rem",
+        borderRadius: "10px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
+      <div className={styles.paperHeader}>
+      <TextField
+        label="Search For Employee"
+        variant="outlined"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        className={styles.searchInput}
+
+      />
+
       {!showRows && (
         <TablePagination
           rowsPerPageOptions={rowsPerPageOptions}
-          count={data.length}
+          count={filteredData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handlePageChange}
@@ -59,13 +83,23 @@ function TableView({
           component="div"
         />
       )}
+      </div>
 
-      <TableContainer component={Paper} className={styles.tableContainer}>
+      <TableContainer component={Paper} sx={{ borderRadius: "10px" }}>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
               {columns.map((column) => (
-                <TableCell key={column.key} className={styles.tableHeader}>
+                <TableCell
+                  key={column.key}
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    color: "#333",
+                    textAlign: "left",
+                    padding: "10px",
+                  }}
+                >
                   {column.label}
                 </TableCell>
               ))}
@@ -73,9 +107,23 @@ function TableView({
           </TableHead>
           <TableBody>
             {paginatedRows.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
+              <TableRow
+                key={rowIndex}
+                sx={{
+                  backgroundColor: rowIndex % 2 === 0 ? "#fafafa" : "#ffffff",
+                  "&:hover": {
+                    backgroundColor: "#f5f5f5",
+                  },
+                }}
+              >
                 {columns.map((column, colIndex) => (
-                  <TableCell key={colIndex}>
+                  <TableCell
+                    key={colIndex}
+                    sx={{
+                      textAlign: column.key === "id" ? "center" : "left",
+                      padding: "10px",
+                    }}
+                  >
                     {column.key === "name" ? (
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <img
@@ -88,7 +136,14 @@ function TableView({
                             marginRight: "10px",
                           }}
                         />
-                        <NavLink to={`/employees/${row.id}`}>
+                        <NavLink
+                          to={`/employees/${row.id}`}
+                          style={{
+                            textDecoration: "none",
+                            color: "#007bff",
+                            fontWeight: "500",
+                          }}
+                        >
                           {row[column.key]}
                         </NavLink>
                       </div>

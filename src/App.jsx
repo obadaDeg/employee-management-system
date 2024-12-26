@@ -7,9 +7,9 @@ import Attendance from "./pages/Attendance/Attendance";
 
 import LoginPage from "./pages/Auth/LoginPage";
 import { loginLoader } from "./utils/loginLoader";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "./store/auth-slice";
+import { logout, setUser } from "./store/auth-slice";
 import { loadEmployees } from "./store/employee-slice";
 import { loadAttendance } from "./store/attendance-slice";
 import EmployeeDetailsPage from "./pages/EmployeeDetailsPage/EmployeeDetailsPage";
@@ -77,6 +77,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  // const appInit = useRef(true);
   const dispatch = useDispatch();
   const user = useAuth();
   // dispatch(
@@ -90,6 +91,11 @@ function App() {
   // const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    // if (appInit.current) {
+    //   appInit.current = false;
+    //   return;
+    // }
+
     const fetchUserFromToken = async () => {
       try {
         dispatch(
@@ -103,6 +109,7 @@ function App() {
         dispatch(loadAttendance());
       } catch (error) {
         console.error("Error fetching user from token:", error.message);
+        // dispatch(logout());
       }
     };
 
