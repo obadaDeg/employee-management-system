@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styles from "./EmployeeDetailsPage.module.css";
 import AttendanceCard from "../../components/AttendanceCard/AttendanceCard";
+import { defaultImage } from "../../utils/constants";
 
 export default function EmployeeDetailsPage() {
   const { id } = useParams();
@@ -11,7 +12,7 @@ export default function EmployeeDetailsPage() {
   const employee = employeesData.find((emp) => emp.id === id);
 
   if (!employee) {
-    return <p>Employee not found</p>;
+    return <p className={styles.notFound}>Employee not found</p>;
   }
 
   const employeeAttendance = attendanceData
@@ -38,7 +39,7 @@ export default function EmployeeDetailsPage() {
     <div className={styles.employeeDetailsContainer}>
       <h1 className={styles.employeeName}>{employee.name?.stringValue}</h1>
       <img
-        src={employee.image?.stringValue || "/default-avatar.png"}
+        src={employee.image?.stringValue || defaultImage}
         alt={employee.name?.stringValue}
         className={styles.employeeImage}
       />
