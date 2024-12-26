@@ -18,7 +18,6 @@ import {
   removeEmployee,
 } from "../../store/employee-slice";
 import styles from "./AllEmployees.module.css";
-import { employeesData } from "../../utils/dummyData";
 
 const transformEmployeeData = (employees) => {
   if (!Array.isArray(employees)) return [];

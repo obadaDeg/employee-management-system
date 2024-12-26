@@ -65,6 +65,9 @@ export const getUserFromToken = async () => {
     const role = idTokenResult.claims.role || null;
     const email = user.email;
 
+    console.log(role);
+    
+
     return {
       token,
       email,
