@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import useAuth from "../hooks/useAuth";
+// import useAuth from "../hooks/useAuth";
 import { useSelector } from "react-redux";
 
 export default function ProtectedRoute({ children, allowedRoles = "All" }) {
@@ -10,11 +10,6 @@ export default function ProtectedRoute({ children, allowedRoles = "All" }) {
   if (allowedRoles === "All") return children;
 
   if (!user || !allowedRoles.includes(role)) {
-    console.log(
-      "Redirecting due to failed role check:",
-      !user,
-      !allowedRoles.includes(role)
-    );
     return <Navigate to="/" />;
   }
 
@@ -25,5 +20,8 @@ export default function ProtectedRoute({ children, allowedRoles = "All" }) {
 
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,
-  allowedRoles: PropTypes.array.isRequired,
+  allowedRoles: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
 };

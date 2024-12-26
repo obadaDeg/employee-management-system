@@ -107,7 +107,7 @@ export default function AllEmployeesPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        {user && role == 'root' && <Button
+        {user && (role == 'root' || role == 'admin') && <Button
           variant="contained"
           color="primary"
           onClick={addEmployeeModal.openModal}

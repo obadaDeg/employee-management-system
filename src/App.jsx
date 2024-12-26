@@ -27,7 +27,7 @@ const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles="All">
             <HomePage />
           </ProtectedRoute>
         ),
@@ -96,7 +96,7 @@ function App() {
           setUser({
             email: user.email,
             role: user.role,
-            token: user.token,
+            token: user.accessToken,
           })
         );
         dispatch(loadEmployees());
