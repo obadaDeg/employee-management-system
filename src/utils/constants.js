@@ -21,12 +21,13 @@ export const loginFields = [
 ];
 
 export const employeeFields = [
-  { id: "name", label: "Name", required: true },
+  { id: "name", label: "Name", type: "text", required: true },
   { id: "id", label: "ID", required: true },
   { id: "designation", label: "Designation", required: true },
   {
     id: "type",
     label: "Type",
+    type: "select",
     required: true,
     options: [
       { label: "Permanent", value: "permanent" },
@@ -36,6 +37,7 @@ export const employeeFields = [
   {
     id: "status",
     label: "Status",
+    type: "select",
     required: true,
     options: [
       { label: "Active", value: "active" },
@@ -43,8 +45,6 @@ export const employeeFields = [
     ],
   },
 ];
-
-
 
 export const defaultImage =
   "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-875.jpg";

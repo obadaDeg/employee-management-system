@@ -6,60 +6,10 @@ import MockCard from "../../components/MockCard/MockCard";
 import AttendanceCard from "../../components/AttendanceCard/AttendanceCard";
 import { attendanceColumns } from "../../utils/constants";
 import { useSelector } from "react-redux";
-
-function StatusMessage({ status, error, dataName }) {
-  if (status === "loading") return <p>Loading {dataName}...</p>;
-  if (status === "failed")
-    return (
-      <p>
-        Error loading {dataName}: {error}
-      </p>
-    );
-  return null;
-}
-
-const transformAttendanceData = (attendance, employees) => {
-  if (!attendance || attendance.length === 0) return [];
-
-  const latestAttendanceData = attendance[attendance.length - 1] || {};
-
-  return Object.keys(latestAttendanceData)
-    .filter((key) => key !== "id")
-    .map((key) => {
-      const item = latestAttendanceData[key];
-      const fields = item?.mapValue?.fields;
-
-      if (!fields) {
-        console.error(`Invalid attendance item at key ${key}:`, item);
-        return null;
-      }
-
-      const checkinTimeValue = fields.checkinTime?.integerValue
-        ? new Date(Number(fields.checkinTime.integerValue))
-        : null;
-      const checkinTimeFormatted = checkinTimeValue
-        ? checkinTimeValue.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : "N/A";
-
-      const employee = employees.find((employee) => employee.id === key);
-      const name = employee?.name?.stringValue || "Unknown Employee";
-      const image = employee?.image?.stringValue || null;
-
-      return {
-        id: key,
-        name,
-        image,
-        designation: employee?.designation?.stringValue || "Unknown",
-        type: "Office",
-        checkinTime: checkinTimeFormatted,
-        status: fields.status?.stringValue || "Unknown",
-      };
-    })
-    .filter(Boolean); // Remove invalid entries
-};
+import { Home } from "@mui/icons-material";
+import PropTypes from "prop-types";
+import StatusMessage from "../../components/StatusMessage/StatusMessage";
+import { transformAttendanceData } from "../../utils/data-transformation";
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -173,3 +123,13 @@ export default function HomePage() {
     </div>
   );
 }
+
+
+Home.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  name: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  timeIn: PropTypes.string.isRequired,
+  image: PropTypes.string,
+};

@@ -15,6 +15,7 @@ import { loadEmployees } from "./store/employee-slice";
 import { loadAttendance } from "./store/attendance-slice";
 import EmployeeDetailsPage from "./pages/EmployeeDetailsPage/EmployeeDetailsPage";
 import ErrorPage from "./pages/RootLayout/ErrorPage";
+import ErrorEmployee from "./pages/AllEmployees/ErrorEmployee";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: "employees",
+        errorElement: <ErrorEmployee />,
         children: [
           {
             index: true,

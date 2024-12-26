@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, TextField, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -18,12 +18,13 @@ import {
   removeEmployee,
 } from "../../store/employee-slice";
 import styles from "./AllEmployees.module.css";
+import { employeesData } from "../../utils/dummyData";
 
 const transformEmployeeData = (employees) => {
   if (!Array.isArray(employees)) return [];
 
   return employees.map((employee) => {
-    const safeEmployee = employee || {}; // Ensure employee is at least an empty object
+    const safeEmployee = employee || {}; 
     return {
       id: safeEmployee.id || "Unknown ID",
       name: safeEmployee.name?.stringValue || "Unknown Employee",
@@ -77,6 +78,7 @@ export default function AllEmployeesPage() {
     name: employee.name || "N/A",
     id: employee.id || "N/A",
     designation: employee.designation || "N/A",
+
     type: employee.type || "N/A",
     status: employee.status || "N/A",
     actions: [
@@ -132,13 +134,16 @@ export default function AllEmployeesPage() {
         onClose={addEmployeeModal.closeModal}
       >
         <Form
-          fields={employeeFields.map((field) => ({
-            ...field,
-            value: addEmployeeForm.values[field.id] || "",
-            error: addEmployeeForm.errors[field.id] || null,
-            onChange: (value) => addEmployeeForm.handleChange(field.id, value),
-            onBlur: () => addEmployeeForm.handleBlur(field.id),
-          }))}
+          fields={employeeFields.map((field) => {
+            return {
+              ...field,
+              value: addEmployeeForm.formValues[field.id] || "",
+              error: addEmployeeForm.errors[field.id] || null,
+              onChange: (value) =>
+                addEmployeeForm.handleChange(field.id, value),
+              onBlur: () => addEmployeeForm.handleBlur(field.id),
+            };
+          })}
           onSubmit={addEmployeeForm.handleSubmit}
           buttonTitle="Add Employee"
         />

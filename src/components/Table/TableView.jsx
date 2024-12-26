@@ -24,6 +24,9 @@ function TableView({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
 
+  console.log(data);
+   
+
   const paginatedRows = Array.isArray(data)
     ? showRows
       ? data.slice(0, showRows)

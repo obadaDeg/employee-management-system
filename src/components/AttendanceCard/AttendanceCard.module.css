@@ -2,52 +2,53 @@
   text-decoration: none;
   color: inherit;
   display: inline-block;
-  margin: 16px;
+  margin: 1em;
 }
 
 .card {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 16px;
-  margin: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex: 1 1 calc(33.333% - 2em);
+  max-width: 18.75em;
+  min-width: 12.5em;
+  border: 0.0625em solid #ddd;
+  border-radius: 0.75em;
+  padding: 1em;
+  box-shadow: 0 0.25em 0.375em rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 250px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.375em 0.75em rgba(0, 0, 0, 0.15);
 }
 
 .avatar {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 16px;
-  border: 2px solid #2196f3;
+  width: 5em;
+  height: 5em;
+  margin-bottom: 1em;
+  border: 0.125em solid #2196f3;
   border-radius: 50%;
 }
 
 .cardContent {
-  margin-bottom: 12px;
+  margin-bottom: 0.75em;
 }
 
 .name {
   font-size: 1.2rem;
   font-weight: bold;
   margin: 0;
-  margin-bottom: 8px;
+  margin-bottom: 0.5em;
 }
 
 .info {
-  margin: 4px 0;
+  margin: 0.25em 0;
   font-size: 0.9rem;
   color: #555;
 }
 
 .chip {
-  margin-top: 8px;
+  margin-top: 0.5em;
 }
 
 .onTime {
