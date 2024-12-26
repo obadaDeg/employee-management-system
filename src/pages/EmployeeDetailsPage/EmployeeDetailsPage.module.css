@@ -1,0 +1,30 @@
+.employeeDetailsContainer {
+    padding: 20px;
+  }
+  
+  .employeeName {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .employeeImage {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  
+  .employeeDesignation {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .attendanceSection {
+    margin-top: 30px;
+  }
+  
+  .attendanceSection h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  

@@ -128,7 +128,7 @@ export const fetchEmployees = async () => {
     if (!employees.length) {
         console.warn("No employees found");
     }
-    console.log(employees);
+    // console.log(employees);
     
     return employees;
 };
@@ -138,7 +138,7 @@ export const fetchAttendance = async () => {
     if (!attendance.length) {
         console.warn("No attendance records found");
     }
-    console.log(attendance);
+    // console.log(attendance);
     
     return attendance;
 };

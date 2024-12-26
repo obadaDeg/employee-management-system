@@ -9,9 +9,57 @@ import { useSelector } from "react-redux";
 
 function StatusMessage({ status, error, dataName }) {
   if (status === "loading") return <p>Loading {dataName}...</p>;
-  if (error) return <p>Error loading {dataName}: {error}</p>;
+  if (status === "failed")
+    return (
+      <p>
+        Error loading {dataName}: {error}
+      </p>
+    );
   return null;
 }
+
+const transformAttendanceData = (attendance, employees) => {
+  if (!attendance || attendance.length === 0) return [];
+
+  const latestAttendanceData = attendance[attendance.length - 1] || {};
+
+  return Object.keys(latestAttendanceData)
+    .filter((key) => key !== "id")
+    .map((key) => {
+      const item = latestAttendanceData[key];
+      const fields = item?.mapValue?.fields;
+
+      if (!fields) {
+        console.error(`Invalid attendance item at key ${key}:`, item);
+        return null;
+      }
+
+      const checkinTimeValue = fields.checkinTime?.integerValue
+        ? new Date(Number(fields.checkinTime.integerValue))
+        : null;
+      const checkinTimeFormatted = checkinTimeValue
+        ? checkinTimeValue.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "N/A";
+
+      const employee = employees.find((employee) => employee.id === key);
+      const name = employee?.name?.stringValue || "Unknown Employee";
+      const image = employee?.image?.stringValue || null;
+
+      return {
+        id: key,
+        name,
+        image,
+        designation: employee?.designation?.stringValue || "Unknown",
+        type: "Office",
+        checkinTime: checkinTimeFormatted,
+        status: fields.status?.stringValue || "Unknown",
+      };
+    })
+    .filter(Boolean); // Remove invalid entries
+};
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,22 +75,15 @@ export default function HomePage() {
   } = useSelector((state) => state.employees);
 
   const viewMode = searchParams.get("view") || "cards";
-  const attendanceData = attendance[attendance.length - 1] || [];
-  
-  console.log(attendance);  
-
+  const transformedAttendanceData = transformAttendanceData(
+    attendance,
+    employeesData
+  );
 
   const handleViewChange = (event, newMode) => {
     if (newMode) {
       setSearchParams({ view: newMode });
     }
-  };
-
-  const renderAttendanceCards = () => {
-    return Object.keys(attendanceData).map((key) => {
-      console.log(attendanceData[key]);
-      return <AttendanceCard key={key} data={attendanceData[key]} />;
-    });
   };
 
   return (
@@ -57,7 +98,7 @@ export default function HomePage() {
         <MockCard
           title={"Total Attendance"}
           updatedTime={new Date().toLocaleTimeString()}
-          count={attendanceData.length}
+          count={transformedAttendanceData.length}
           linkTo="/attendance"
         />
       </section>
@@ -82,7 +123,7 @@ export default function HomePage() {
           onChange={handleViewChange}
           aria-label="View Mode"
           className={styles.toggleButtons}
-          disabled={attendanceStatus === "loading" || attendanceError}
+          disabled={attendanceStatus.load === "loading"}
         >
           <ToggleButton value="cards" aria-label="Card View">
             Card View
@@ -95,24 +136,39 @@ export default function HomePage() {
         {viewMode === "table" ? (
           <TableView
             columns={attendanceColumns}
-            data={attendanceData}
+            data={transformedAttendanceData}
             showRows={5}
           />
         ) : (
           <div className={styles.cardViewContainer}>
-            <div className={styles.cardView}>{renderAttendanceCards()}</div>
-            <Link to={"attendance"} className={styles.viewMore}>
-              <Button
-                disableElevation
-                disableFocusRipple
-                disableTouchRipple
-                disabled={attendanceStatus === "loading" || attendanceError}
-              >
-                View More
-              </Button>
-            </Link>
+            <div className={styles.cardView}>
+              {transformedAttendanceData.map((item) => (
+                <AttendanceCard
+                  key={item.id}
+                  id={item.id}
+                  name={item.name}
+                  image={item.image}
+                  date={item.date}
+                  status={item.status}
+                  timeIn={item.checkinTime}
+                />
+              ))}
+            </div>
           </div>
         )}
+        <Link to={"attendance"} className={styles.viewMore}>
+          <Button
+            disableElevation
+            disableFocusRipple
+            disableTouchRipple
+            disabled={
+              attendanceStatus.load === "loading" || attendanceError.load
+            }
+            className={styles.viewMore}
+          >
+            View More
+          </Button>
+        </Link>
       </section>
     </div>
   );

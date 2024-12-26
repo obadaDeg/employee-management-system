@@ -14,7 +14,6 @@ import styles from "./TableView.module.css";
 import { NavLink } from "react-router-dom";
 import { defaultImage } from "../../utils/constants";
 
-// Default image for user profiles
 function TableView({
   columns,
   data,
@@ -25,9 +24,11 @@ function TableView({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
 
-  const paginatedRows = showRows
-    ? data.slice(0, showRows)
-    : data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedRows = Array.isArray(data)
+    ? showRows
+      ? data.slice(0, showRows)
+      : data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    : [];
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -36,7 +37,7 @@ function TableView({
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
+  };  
 
   return (
     <Paper
@@ -75,7 +76,7 @@ function TableView({
                     {column.key === "name" ? (
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <img
-                          src={defaultImage}
+                          src={row.image || defaultImage}
                           alt="User"
                           style={{
                             width: "30px",

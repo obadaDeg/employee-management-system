@@ -13,6 +13,7 @@ import { getUserFromToken, setUser } from "./store/auth-slice";
 import { fetchEmployees } from "./utils/firebase-services";
 import { loadEmployees } from "./store/employee-slice";
 import { loadAttendance } from "./store/attendance-slice";
+import EmployeeDetailsPage from "./pages/EmployeeDetailsPage/EmployeeDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
           },
           {
             path: ":id",
-            element: <></>,
+            element: <EmployeeDetailsPage />,
           },
         ],
       },

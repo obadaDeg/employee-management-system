@@ -1,52 +1,74 @@
-import TableView from "../../components/Table/TableView";
-import { employeeColumns } from "../../utils/constants";
-import { employeesData } from "../../utils/dummyData";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
-import { useState } from "react";
-import Modal from "../../components/Modal/Modal";
 import { Link } from "react-router-dom";
-import stylesModule from "./AllEmployees.module.css"
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import TableView from "../../components/Table/TableView";
+import Modal from "../../components/Modal/Modal";
+import Form from "../../components/Form/Form";
+import useForm from "../../hooks/useForm";
+import { useModal } from "../../hooks/useModal";
+import { employeeFields } from "../../utils/constants";
+import {
+  loadEmployees,
+  createEmployee,
+  editEmployee,
+  removeEmployee,
+} from '../../store/employee-slice';
+import styles from "./AllEmployees.module.css";
+import { useEffect } from "react";
 
 export default function AllEmployeesPage() {
-  const [openAddNewEmployee, setOpenAddNewEmployee] = useState(false);
-  const [editEmployee, setEditEmployee] = useState(false);
-  const [deleteEmployee, setDeleteEmployee] = useState(false);
-  function handleOpen() {
-    setOpenAddNewEmployee(true);
-  }
+  const dispatch = useDispatch();
 
-  function handleClose() {
-    setOpenAddNewEmployee(false);
-  }
+  const employees = useSelector((state) => state.employees.list);
 
-  const data = employeesData.map((employee) => ({
+  useEffect(() => {
+    dispatch(loadEmployees());
+  }, [dispatch]);
+
+  const addEmployeeModal = useModal();
+  const editEmployeeModal = useModal();
+  const deleteEmployeeModal = useModal();
+
+  const addEmployeeForm = useForm({}, {}, (formValues) => {
+    dispatch(createEmployee(formValues));
+    addEmployeeModal.closeModal();
+  });
+
+  const editEmployeeForm = useForm({}, {}, (formValues) => {
+    dispatch(
+      editEmployee({
+        employeeId: editEmployeeModal.context.id,
+        data: formValues,
+      })
+    );
+    editEmployeeModal.closeModal();
+  });
+
+  const handleDelete = () => {
+    dispatch(removeEmployee(deleteEmployeeModal.context));
+    deleteEmployeeModal.closeModal();
+  };
+
+  const tableData = employees.map((employee) => ({
     ...employee,
     actions: [
       <Link key={`view-${employee.id}`} to={`/employees/${employee.id}`}>
-        <VisibilityIcon fontSize="small"  
-        className={stylesModule.actionIcon}
-
-        />
+        <VisibilityIcon fontSize="small" className={styles.actionIcon} />
       </Link>,
       <EditIcon
         key={`edit-${employee.id}`}
         fontSize="small"
-        className={stylesModule.actionIcon}
-        onClick={() => {
-          setEditEmployee(true);
-        }}
+        className={styles.actionIcon}
+        onClick={() => editEmployeeModal.openModal(employee)}
       />,
       <DeleteIcon
         key={`delete-${employee.id}`}
         fontSize="small"
-        className={stylesModule.actionIcon}
-        
-        onClick={() => {
-          setDeleteEmployee(true);
-        }}
+        className={styles.actionIcon}
+        onClick={() => deleteEmployeeModal.openModal(employee.id)}
       />,
     ],
   }));
@@ -56,29 +78,66 @@ export default function AllEmployeesPage() {
       <Button
         variant="contained"
         color="primary"
-        onClick={handleOpen}
+        onClick={addEmployeeModal.openModal}
         disableElevation
-        disableFocusRipple
-        disableRipple
-        // className={stylesModule.newButton} // not working
-        sx={{
-          margin: "0 1rem",
-        }}
+        sx={{ margin: "0 1rem" }}
       >
         Add New Employee
       </Button>
 
       <Modal
-        isOpen={openAddNewEmployee}
+        isOpen={addEmployeeModal.isOpen}
         title="Add New Employee"
-        onClose={handleClose}
+        onClose={addEmployeeModal.closeModal}
       >
-        <form></form>
+        <Form
+          fields={employeeFields.map((field) => ({
+            ...field,
+            value: addEmployeeForm.values[field.id] || "",
+            error: addEmployeeForm.errors[field.id] || null,
+            onChange: (value) => addEmployeeForm.handleChange(field.id, value),
+            onBlur: () => addEmployeeForm.handleBlur(field.id),
+          }))}
+          onSubmit={addEmployeeForm.handleSubmit}
+          buttonTitle="Add Employee"
+        />
       </Modal>
-      <Modal isOpen={editEmployee} title={"Edit Employee"}>hi</Modal>
-      <Modal isOpen={deleteEmployee} title={"Are you sure you want to delete this employee?"}>hey</Modal>
 
-      <TableView columns={employeeColumns} data={data} />
+      <Modal
+        isOpen={editEmployeeModal.isOpen}
+        title="Edit Employee"
+        onClose={editEmployeeModal.closeModal}
+      >
+        <Form
+          fields={employeeFields.map((field) => ({
+            ...field,
+            value: editEmployeeModal.context?.[field.id] || "",
+            error: editEmployeeForm.errors[field.id] || null,
+            onChange: (value) => editEmployeeForm.handleChange(field.id, value),
+            onBlur: () => editEmployeeForm.handleBlur(field.id),
+          }))}
+          onSubmit={editEmployeeForm.handleSubmit}
+          buttonTitle="Save Changes"
+        />
+      </Modal>
+
+      <Modal
+        isOpen={deleteEmployeeModal.isOpen}
+        title="Confirm Deletion"
+        onClose={deleteEmployeeModal.closeModal}
+      >
+        <p>Are you sure you want to delete this employee?</p>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Button variant="outlined" color="error" onClick={handleDelete}>
+            Delete
+          </Button>
+          <Button variant="outlined" onClick={deleteEmployeeModal.closeModal}>
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+
+      <TableView columns={employeeFields} data={tableData} />
     </>
   );
 }

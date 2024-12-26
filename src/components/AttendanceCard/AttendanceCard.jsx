@@ -1,31 +1,38 @@
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Avatar, Chip } from "@mui/material";
 import styles from "./AttendanceCard.module.css";
-import { defaultImage } from "../../utils/constants";
 
-export default function AttendanceCard({ data }) {  
+export default function AttendanceCard({ id, name, date, status, timeIn, image }) {
   return (
-    <Link to={`/employees/${data.id}`} className={styles.cardLink}>
+    <Link to={`/employees/${id}`} className={styles.cardLink}>
       <div className={styles.card}>
-        <img src={data.image || defaultImage} alt={data.name} className={styles.cardImage} />
-        <h3>{data.name}</h3>
-        <p>Date: {data.date}</p>
-        <p>Status: {data.status}</p>
-        <p>Time In: {data.timeIn}</p>
-        <p>Time Out: {data.timeOut}</p>
+        <Avatar
+          src={image || undefined}
+          alt={name}
+          className={styles.avatar}
+        />
+        <div className={styles.cardContent}>
+          <h3 className={styles.name}>{name || "Unknown Employee"}</h3>
+          <p className={styles.info}><strong>Date:</strong> {date || "N/A"}</p>
+          <p className={styles.info}><strong>Status:</strong> {status || "N/A"}</p>
+          <p className={styles.info}><strong>Time In:</strong> {timeIn || "N/A"}</p>
+        </div>
+        <Chip
+          label={status === "Present" ? "On Time" : "Late"}
+          className={`${styles.chip} ${status === "Present" ? styles.onTime : styles.late}`}
+          size="small"
+        />
       </div>
     </Link>
   );
 }
 
 AttendanceCard.propTypes = {
-  data: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    timeIn: PropTypes.string.isRequired,
-    timeOut: PropTypes.string.isRequired,
-  }),
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  timeIn: PropTypes.string.isRequired,
+  image: PropTypes.string,
 };

@@ -1,21 +1,61 @@
 .cardLink {
   text-decoration: none;
   color: inherit;
+  display: inline-block;
+  margin: 16px;
 }
 
 .card {
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 16px;
   margin: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 200px;
+  max-width: 250px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.cardImage {
-  width: 100%;
-  height: auto;
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  border: 2px solid #2196f3;
   border-radius: 50%;
+}
+
+.cardContent {
+  margin-bottom: 12px;
+}
+
+.name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
   margin-bottom: 8px;
+}
+
+.info {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.chip {
+  margin-top: 8px;
+}
+
+.onTime {
+  background-color: #4caf50 !important;
+  color: #fff !important;
+}
+
+.late {
+  background-color: #f44336 !important;
+  color: #fff !important;
 }
