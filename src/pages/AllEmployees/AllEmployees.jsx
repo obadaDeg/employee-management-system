@@ -47,6 +47,8 @@ export default function AllEmployeesPage() {
     dispatch(loadEmployees());
   }, [dispatch]);
 
+  const { user, role } = useSelector((state) => state.auth);
+
   const addEmployeeModal = useModal();
   const editEmployeeModal = useModal();
   const deleteEmployeeModal = useModal();
@@ -105,7 +107,7 @@ export default function AllEmployeesPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Button
+        {user && role == 'root' && <Button
           variant="contained"
           color="primary"
           onClick={addEmployeeModal.openModal}
@@ -113,7 +115,7 @@ export default function AllEmployeesPage() {
           sx={{ margin: "0 1rem" }}
         >
           Add New Employee
-        </Button>
+        </Button>}
         <TextField
           placeholder="Search employees..."
           variant="outlined"
