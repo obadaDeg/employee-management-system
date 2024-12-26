@@ -1,5 +1,6 @@
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "@mui/material";
+import { Button, TextField, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
@@ -15,14 +16,12 @@ import {
   createEmployee,
   editEmployee,
   removeEmployee,
-} from '../../store/employee-slice';
+} from "../../store/employee-slice";
 import styles from "./AllEmployees.module.css";
-import { useEffect } from "react";
 
 export default function AllEmployeesPage() {
   const dispatch = useDispatch();
-
-  const employees = useSelector((state) => state.employees.list);
+  const { list: employees, status, error } = useSelector((state) => state.employees);
 
   useEffect(() => {
     dispatch(loadEmployees());
@@ -73,18 +72,36 @@ export default function AllEmployeesPage() {
     ],
   }));
 
-  return (
-    <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={addEmployeeModal.openModal}
-        disableElevation
-        sx={{ margin: "0 1rem" }}
-      >
-        Add New Employee
-      </Button>
+  if (status === "loading") return <CircularProgress />;
+  if (status === "failed") return <p>Error loading employees: {error}</p>;
 
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={addEmployeeModal.openModal}
+          disableElevation
+          sx={{ margin: "0 1rem" }}
+        >
+          Add New Employee
+        </Button>
+        <TextField
+          placeholder="Search employees..."
+          variant="outlined"
+          size="small"
+          sx={{ margin: "0 1rem", width: "300px" }}
+          onChange={(e) => {
+            const searchValue = e.target.value.toLowerCase();
+            // You could implement filtering logic here
+          }}
+        />
+      </div>
+
+      <TableView columns={employeeFields} data={tableData} />
+
+      {/* Add Employee Modal */}
       <Modal
         isOpen={addEmployeeModal.isOpen}
         title="Add New Employee"
@@ -103,6 +120,7 @@ export default function AllEmployeesPage() {
         />
       </Modal>
 
+      {/* Edit Employee Modal */}
       <Modal
         isOpen={editEmployeeModal.isOpen}
         title="Edit Employee"
@@ -121,6 +139,7 @@ export default function AllEmployeesPage() {
         />
       </Modal>
 
+      {/* Delete Employee Modal */}
       <Modal
         isOpen={deleteEmployeeModal.isOpen}
         title="Confirm Deletion"
@@ -136,8 +155,6 @@ export default function AllEmployeesPage() {
           </Button>
         </div>
       </Modal>
-
-      <TableView columns={employeeFields} data={tableData} />
-    </>
+    </div>
   );
 }

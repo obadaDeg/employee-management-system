@@ -1,0 +1,42 @@
+.errorPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.iconContainer {
+  margin-bottom: 20px;
+}
+
+.errorIcon {
+  color: #ff6f61;
+  font-size: 4rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.message {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 15px;
+}
+
+.link {
+  text-decoration: none;
+}

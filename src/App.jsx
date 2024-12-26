@@ -14,11 +14,13 @@ import { fetchEmployees } from "./utils/firebase-services";
 import { loadEmployees } from "./store/employee-slice";
 import { loadAttendance } from "./store/attendance-slice";
 import EmployeeDetailsPage from "./pages/EmployeeDetailsPage/EmployeeDetailsPage";
+import ErrorPage from "./pages/RootLayout/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
